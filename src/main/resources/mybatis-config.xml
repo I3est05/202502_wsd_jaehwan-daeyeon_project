@@ -3,6 +3,6 @@
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
     <typeAliases>
-        <typeAlias alias="board" type="com.example.bean.BookVO" />
+        <typeAlias alias="scholarship" type="com.example.donjoogga.vo.Scholarship"/>
     </typeAliases>
 </configuration>
