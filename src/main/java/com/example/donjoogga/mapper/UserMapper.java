@@ -10,4 +10,6 @@ public interface UserMapper {
 
     // 로그인 (이메일로 회원 찾기)
     User findById(String user_id);
+
+    void update(User user);
 }

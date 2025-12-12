@@ -72,7 +72,7 @@
                 </table>
 
                 <div class="mt-4 text-end">
-                    <a href="/mypage/edit" class="btn btn-warning"><i class="fa-solid fa-pencil me-2"></i> 정보 수정</a>
+                    <a href="mypage/edit" class="btn btn-warning"><i class="fa-solid fa-pencil me-2"></i> 정보 수정</a>
                 </div>
             </div>
         </div>

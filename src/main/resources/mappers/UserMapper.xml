@@ -20,4 +20,15 @@
         WHERE user_id = #{userId}
     </select>
 
+    <update id="update" parameterType="com.example.donjoogga.vo.User">
+        UPDATE User
+        SET
+            password = #{password},
+            email = #{email},
+            income_bracket = #{incomeBracket},
+            gpa = #{gpa}
+        WHERE
+            user_id = #{userId}
+    </update>
+
 </mapper>
