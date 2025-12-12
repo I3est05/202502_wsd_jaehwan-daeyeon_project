@@ -20,8 +20,8 @@
     <form action="/join" method="POST">
       <div class="section-title">기본 정보</div>
       <div class="mb-3">
-        <label class="form-label">이름</label>
-        <input type="text" name="name" class="form-control" placeholder="홍길동" required>
+        <label class="form-label">아이디</label>
+        <input type="text" name="userId" class="form-control" placeholder="ronaldo" required>
       </div>
       <div class="mb-3">
         <label class="form-label">이메일</label>

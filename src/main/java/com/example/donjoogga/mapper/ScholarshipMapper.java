@@ -1,4 +1,4 @@
-package com.example.donjoogga.service;
+package com.example.donjoogga.mapper;
 
 import com.example.donjoogga.vo.Scholarship;
 import org.apache.ibatis.annotations.Mapper;

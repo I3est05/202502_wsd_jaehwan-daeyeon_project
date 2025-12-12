@@ -10,10 +10,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        body { font-family: 'Noto Sans KR', sans-serif; background-color: #f8f9fa; }
-        .navbar { box-shadow: 0 2px 4px rgba(0,0,0,0.1); background-color: #fff; }
-        .navbar-brand { font-weight: 700; color: #0d6efd !important; font-size: 1.5rem; }
-        .nav-link { font-weight: 500; color: #333; }
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f8f9fa;
+            padding-top: 60px !important;
+        }
         .hero-section {
             background: linear-gradient(rgba(13, 110, 253, 0.8), rgba(13, 110, 253, 0.6)), url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
             background-size: cover; background-position: center; color: white; padding: 100px 0; text-align: center; margin-bottom: 50px;
@@ -31,54 +32,18 @@
     </style>
 </head>
 <body>
-
-<nav class="navbar navbar-expand-lg fixed-top">
-    <div class="container">
-        <a class="navbar-brand" href="/"><i class="fa-solid fa-graduation-cap"></i> 돈주까</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto align-items-center">
-                <li class="nav-item"><a class="nav-link" href="#">장학금 찾기</a></li>
-                <c:choose>
-                    <c:when test="${sessionScope.loginUser == null}">
-
-                    </c:when>
-                    <c:otherwise>
-                        <li class="nav-item"><a class="nav-link" href="#">컨설팅 리포트</a></li>
-
-                    </c:otherwise>
-                </c:choose>
-                <c:choose>
-                    <c:when test="${sessionScope.loginUser == null}">
-                        <li class="nav-item ms-3">
-                            <a href="/login" class="btn btn-outline-primary rounded-pill px-4">로그인</a>
-                        </li>
-                        <li class="nav-item ms-2">
-                            <a href="/join" class="btn btn-primary rounded-pill px-4">회원가입</a>
-                        </li>
-                    </c:when>
-                    <c:otherwise>
-                        <li class="nav-item ms-3">
-                            <a href="/mypage" class="nav-link fw-bold text-primary">
-                                <i class="fa-solid fa-user-circle"></i> ${sessionScope.loginUser.email}님의 마이페이지
-                            </a>
-                        </li>
-                        <li class="nav-item ms-2">
-                            <a href="/logout" class="btn btn-sm btn-secondary rounded-pill px-3">로그아웃</a>
-                        </li>
-                    </c:otherwise>
-                </c:choose>
-            </ul>
-        </div>
-    </div>
-</nav>
-
+<jsp:include page="../common/top.jsp" />
 <section class="hero-section">
     <div class="container">
         <c:if test="${not empty sessionScope.loginUser}">
-            <h3 class="mb-3 text-warning">반갑습니다, ${sessionScope.loginUser.email}님!</h3>
+            <c:choose>
+                <c:when test="${sessionScope.loginUser.userId.equals('admin')}">
+                    <h3 class="mb-3 text-warning">반갑습니다, 관리자님!</h3>
+                </c:when>
+                <c:otherwise>
+                    <h3 class="mb-3 text-warning">반갑습니다, ${sessionScope.loginUser.userId}님!</h3>
+                </c:otherwise>
+            </c:choose>
         </c:if>
 
         <h1 class="hero-title">놓친 장학금, <br>우리가 찾아 드릴게요</h1>
@@ -148,11 +113,7 @@
 </section>
 
 <footer>
-    <div class="container text-center">
-        <h5 class="fw-bold text-white mb-3">DONJOOGGA</h5>
-        <p class="small text-muted">Github: https://github.com/22400509/2025_wsd_jaehwan_daeyeon</p>
-        <p class="small text-muted">COPYRIGHT © 2025 DONJOOGGA. ALL RIGHTS RESERVED.</p>
-    </div>
+    <jsp:include page="../common/bottom.jsp" />
 </footer>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

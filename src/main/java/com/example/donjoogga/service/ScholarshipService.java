@@ -1,6 +1,6 @@
 package com.example.donjoogga.service;
 
-import com.example.donjoogga.service.ScholarshipMapper;
+import com.example.donjoogga.mapper.ScholarshipMapper;
 import com.example.donjoogga.vo.Scholarship;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
