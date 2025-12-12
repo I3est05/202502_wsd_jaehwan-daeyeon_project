@@ -34,7 +34,7 @@ public class HomeController {
 
             // 3. Thymeleaf/JSP 뷰 이름 반환
             // Spring Boot 설정에 따라 /WEB-INF/views/list.jsp를 찾게 됩니다.
-            return "list";
+            return "board/list";
 
         } catch (Exception e) {
             // 로깅 처리 (에러가 발생하면 서버 로그에 기록)

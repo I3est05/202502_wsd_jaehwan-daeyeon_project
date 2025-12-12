@@ -10,7 +10,6 @@ public class Scholarship {
     private String deadline;
     private String category;
     private int support_amount;
-    private String img;
     private String sourceType;
 
     public String getRefId() {
@@ -59,14 +58,6 @@ public class Scholarship {
 
     public void setSupportAmount(int support_amount) {
         this.support_amount = support_amount;
-    }
-
-    public String getImg() {
-        return img;
-    }
-
-    public void setImg(String img) {
-        this.img = img;
     }
 
     public String getSourceType() {
