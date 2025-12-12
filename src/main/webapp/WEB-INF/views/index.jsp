@@ -41,8 +41,15 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto align-items-center">
                 <li class="nav-item"><a class="nav-link" href="#">장학금 찾기</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">컨설팅 리포트</a></li>
+                <c:choose>
+                    <c:when test="${sessionScope.loginUser == null}">
 
+                    </c:when>
+                    <c:otherwise>
+                        <li class="nav-item"><a class="nav-link" href="#">컨설팅 리포트</a></li>
+
+                    </c:otherwise>
+                </c:choose>
                 <c:choose>
                     <c:when test="${sessionScope.loginUser == null}">
                         <li class="nav-item ms-3">
