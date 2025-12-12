@@ -1,19 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.example.donjoogga.mapper.ScholarshipMapper">
+<mapper namespace="com.example.donjoogga.service.ScholarshipMapper">
 
-    <select id="findAll" resultType="com.example.donjoogga.vo.Scholarship">
+    <select id="selectAllAdminScholarships" resultType="com.example.donjoogga.vo.Scholarship">
         SELECT
-            scholar_id   AS scholarId,
-            title,
-            organization,
-            deadline,
-            category
+            S.scholar_id        AS refId,
+            S.title,
+            S.organization,
+            S.deadline,
+            S.category,
+            S.support_amount    AS supportAmount,
+            S.img,
+            'DB'                AS sourceType
         FROM
-            scholarship
+            Scholar S
         ORDER BY
-            deadline ASC
+            S.deadline ASC
+    </select>
+
+    <select id="selectScholarshipById" resultType="com.example.donjoogga.vo.Scholarship">
+        SELECT
+            S.scholar_id        AS refId,
+            S.title,
+            S.organization,
+            S.deadline,
+            S.category,
+            S.support_amount    AS supportAmount,
+            S.img,
+            'DB'                AS sourceType
+        FROM
+            Scholar S
+        WHERE
+            S.scholar_id = #{id}
     </select>
 
 </mapper>
