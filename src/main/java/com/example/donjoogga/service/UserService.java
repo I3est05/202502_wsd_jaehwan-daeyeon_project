@@ -27,4 +27,9 @@ public class UserService {
         }
         return null; // 실패
     }
+
+    public void updateUser(User user) {
+            userMapper.update(user);
+    }
+
 }
