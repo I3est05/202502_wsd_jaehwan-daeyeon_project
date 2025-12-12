@@ -69,24 +69,7 @@
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg fixed-top">
-    <div class="container">
-        <a class="navbar-brand" href="/"><i class="fa-solid fa-graduation-cap"></i> 돈주까</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto align-items-center">
-                <li class="nav-item"><a class="nav-link active" href= "scholarships">장학금 찾기</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">컨설팅 리포트</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">커뮤니티</a></li>
-                <li class="nav-item ms-3">
-                    <a href="/login" class="btn btn-outline-primary rounded-pill px-4">로그인</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
+<jsp:include page="../common/top.jsp" />
 
 <section class="container" style="padding-top: 100px; padding-bottom: 50px;">
     <h2 class="fw-bold mb-3"><i class="fa-solid fa-coins me-2"></i> 장학금 전체 목록</h2>
@@ -196,10 +179,7 @@
 </section>
 
 <footer>
-    <div class="container text-center py-4" style="background-color: #343a40;">
-        <h5 class="fw-bold text-white mb-3">DONJOOGGA</h5>
-        <p class="small text-muted">COPYRIGHT © 2025 DONJOOGGA. ALL RIGHTS RESERVED.</p>
-    </div>
+    <jsp:include page="../common/bottom.jsp" />
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
