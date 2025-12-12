@@ -4,11 +4,11 @@
 <mapper namespace="com.example.donjoogga.mapper.UserMapper">
 
     <insert id="save" parameterType="com.example.donjoogga.vo.User">
-        INSERT INTO User (email, password, income_bracket, gpa, created_at)
-        VALUES (#{email}, #{password}, #{incomeBracket}, #{gpa}, NOW())
+        INSERT INTO User (user_id, email, password, income_bracket, gpa, created_at)
+        VALUES (#{userId}, #{email}, #{password}, #{incomeBracket}, #{gpa}, NOW())
     </insert>
 
-    <select id="findByEmail" resultType="com.example.donjoogga.vo.User">
+    <select id="findById" resultType="com.example.donjoogga.vo.User">
         SELECT
             user_id        AS userId,
             email          AS email,
@@ -17,7 +17,7 @@
             gpa            AS gpa,
             created_at     AS createdAt
         FROM User
-        WHERE email = #{email}
+        WHERE user_id = #{userId}
     </select>
 
 </mapper>

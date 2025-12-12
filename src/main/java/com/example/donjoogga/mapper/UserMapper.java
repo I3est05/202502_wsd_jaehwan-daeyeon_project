@@ -9,5 +9,5 @@ public interface UserMapper {
     void save(User user);
 
     // 로그인 (이메일로 회원 찾기)
-    User findByEmail(String email);
+    User findById(String user_id);
 }

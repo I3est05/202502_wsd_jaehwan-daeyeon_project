@@ -8,22 +8,20 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-// javax로 바꿔주세요
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @Controller
-public class AutoController {
+public class AuthController {
 
     @Autowired
     private UserService userService;
 
     // --- 페이지 이동 ---
     @GetMapping("/login")
-    public String loginPage() { return "login"; }
+    public String loginPage() { return "user/login"; }
 
     @GetMapping("/join")
-    public String joinPage() { return "join"; }
+    public String joinPage() { return "user/join"; }
 
     @GetMapping("/logout")
     public String logout(HttpSession session) {
@@ -44,16 +42,16 @@ public class AutoController {
 
     // 2. 로그인 실행
     @PostMapping("/login")
-    public String loginProcess(@RequestParam("email") String email,
+    public String loginProcess(@RequestParam("userId") String userId,
                                @RequestParam("password") String password,
                                HttpSession session) {
 
-        User loginUser = userService.login(email, password);
+        User loginUser = userService.login(userId, password);
 
         if (loginUser != null) {
             // 성공: 세션에 유저 정보 담고 메인으로
             session.setAttribute("loginUser", loginUser);
-            System.out.println("로그인 성공: " + loginUser.getEmail());
+            System.out.println("로그인 성공: " + loginUser.getUserId());
             return "redirect:/";
         } else {
             // 실패: 다시 로그인 페이지로 (에러 표시용 파라미터 추가)
