@@ -1,63 +1,31 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %> <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>돈주까 - 대학생 맞춤형 장학금 & 컨설팅 플랫폼</title>
-
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         body { font-family: 'Noto Sans KR', sans-serif; background-color: #f8f9fa; }
-
-        /* 네비게이션 바 */
         .navbar { box-shadow: 0 2px 4px rgba(0,0,0,0.1); background-color: #fff; }
         .navbar-brand { font-weight: 700; color: #0d6efd !important; font-size: 1.5rem; }
         .nav-link { font-weight: 500; color: #333; }
-
-        /* 히어로 섹션 */
         .hero-section {
             background: linear-gradient(rgba(13, 110, 253, 0.8), rgba(13, 110, 253, 0.6)), url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
-            background-size: cover;
-            background-position: center;
-            color: white;
-            padding: 100px 0;
-            text-align: center;
-            margin-bottom: 50px;
+            background-size: cover; background-position: center; color: white; padding: 100px 0; text-align: center; margin-bottom: 50px;
         }
         .hero-title { font-size: 3rem; font-weight: 700; margin-bottom: 20px; }
         .hero-subtitle { font-size: 1.2rem; margin-bottom: 40px; opacity: 0.9; }
-
-        /* 검색창 */
-        .search-box {
-            background: white;
-            padding: 10px;
-            border-radius: 50px;
-            display: flex;
-            max-width: 600px;
-            margin: 0 auto;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
+        .search-box { background: white; padding: 10px; border-radius: 50px; display: flex; max-width: 600px; margin: 0 auto; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
         .search-input { border: none; flex-grow: 1; padding: 10px 20px; outline: none; border-radius: 50px; }
         .search-btn { border-radius: 40px; padding: 10px 30px; font-weight: 600; }
-
-        /* 특징 카드 */
-        .feature-card {
-            border: none;
-            border-radius: 15px;
-            padding: 30px;
-            text-align: center;
-            transition: transform 0.3s ease;
-            background: white;
-            height: 100%;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-        }
+        .feature-card { border: none; border-radius: 15px; padding: 30px; text-align: center; transition: transform 0.3s ease; background: white; height: 100%; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
         .feature-card:hover { transform: translateY(-10px); }
         .icon-box { font-size: 3rem; color: #0d6efd; margin-bottom: 20px; }
-
         .stats-section { background-color: white; padding: 60px 0; margin-top: 50px; }
         footer { background-color: #343a40; color: #ccc; padding: 30px 0; margin-top: 80px; }
     </style>
@@ -72,13 +40,29 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto align-items-center">
-                <li class="nav-item"><a class="nav-link" href= "scholarships">장학금 찾기</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">장학금 찾기</a></li>
                 <li class="nav-item"><a class="nav-link" href="#">컨설팅 리포트</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">커뮤니티</a></li>
 
-                <li class="nav-item ms-3">
-                    <a href="/login" class="btn btn-outline-primary rounded-pill px-4">로그인</a>
-                </li>
+                <c:choose>
+                    <c:when test="${sessionScope.loginUser == null}">
+                        <li class="nav-item ms-3">
+                            <a href="/login" class="btn btn-outline-primary rounded-pill px-4">로그인</a>
+                        </li>
+                        <li class="nav-item ms-2">
+                            <a href="/join" class="btn btn-primary rounded-pill px-4">회원가입</a>
+                        </li>
+                    </c:when>
+                    <c:otherwise>
+                        <li class="nav-item ms-3">
+                            <a href="/mypage" class="nav-link fw-bold text-primary">
+                                <i class="fa-solid fa-user-circle"></i> ${sessionScope.loginUser.email}님의 마이페이지
+                            </a>
+                        </li>
+                        <li class="nav-item ms-2">
+                            <a href="/logout" class="btn btn-sm btn-secondary rounded-pill px-3">로그아웃</a>
+                        </li>
+                    </c:otherwise>
+                </c:choose>
             </ul>
         </div>
     </div>
@@ -86,6 +70,10 @@
 
 <section class="hero-section">
     <div class="container">
+        <c:if test="${not empty sessionScope.loginUser}">
+            <h3 class="mb-3 text-warning">반갑습니다, ${sessionScope.loginUser.email}님!</h3>
+        </c:if>
+
         <h1 class="hero-title">놓친 장학금, <br>우리가 찾아 드릴게요</h1>
         <p class="hero-subtitle">
             소득분위, 학점, 전공만 입력하세요.<br>
@@ -159,7 +147,6 @@
         <p class="small text-muted">COPYRIGHT © 2025 DONJOOGGA. ALL RIGHTS RESERVED.</p>
     </div>
 </footer>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

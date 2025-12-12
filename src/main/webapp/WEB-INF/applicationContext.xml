@@ -25,6 +25,6 @@
         <constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory"/>
     </bean>
 
-    <mybatis-spring:scan base-package="com.example.donjoogga.service" />
+    <mybatis-spring:scan base-package="com.example.donjoogga.mapper" />
 
 </beans>
