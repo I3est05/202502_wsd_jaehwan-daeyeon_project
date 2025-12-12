@@ -3,6 +3,28 @@
 
 <mapper namespace="com.example.donjoogga.mapper.ScholarshipMapper">
 
+    <resultMap id="scholarshipResultMap" type="com.example.donjoogga.vo.Scholarship">
+        <id property="refId" column="refId"/>
+
+        <result property="title" column="title"/>
+        <result property="organization" column="organization"/>
+        <result property="deadline" column="deadline"/>
+        <result property="category" column="category"/>
+        <result property="support_amount" column="support_amount"/>
+        <result property="description" column="description"/>
+        <result property="sourceType" column="sourceType"/>
+    </resultMap>
+
+    <select id="selectTotalCount" resultType="int">
+        SELECT COUNT(*) FROM Scholar
+    </select>
+
+    <select id="selectPagedScholarships" resultMap="scholarshipResultMap">
+        SELECT *
+        FROM Scholar
+        ORDER BY scholar_id DESC LIMIT #{pageSize} OFFSET #{startRow}
+    </select>
+
     <select id="selectAllAdminScholarships" resultType="com.example.donjoogga.vo.Scholarship">
         SELECT
             S.scholar_id        AS refId,
@@ -11,8 +33,8 @@
             S.deadline,
             S.category,
             S.support_amount    AS supportAmount,
-            S.img,
             'DB'                AS sourceType
+            S.description
         FROM
             Scholar S
         ORDER BY
@@ -27,8 +49,8 @@
             S.deadline,
             S.category,
             S.support_amount    AS supportAmount,
-            S.img,
-            'DB'                AS sourceType
+            S.description
+            S.sourceType
         FROM
             Scholar S
         WHERE

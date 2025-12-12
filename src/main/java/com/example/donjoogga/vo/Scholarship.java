@@ -1,79 +1,38 @@
 package com.example.donjoogga.vo;
+
 import lombok.Data;
+import com.opencsv.bean.CsvBindByName;
 import java.time.LocalDateTime;
 
 @Data
 public class Scholarship {
-    private String refId;
+
+    // refId를 Long 타입으로 변경 (CSV '번호' 컬럼)
+    @CsvBindByName(column = "번호")
+    private Long refId;
+
+    // 기본 정보 매핑 (String 유지)
+    @CsvBindByName(column = "상품명")
     private String title;
+
+    @CsvBindByName(column = "운영기관명")
     private String organization;
+
+    @CsvBindByName(column = "모집종료일")
     private String deadline;
+
+    @CsvBindByName(column = "학자금유형구분")
     private String category;
-    private int support_amount;
-    private String img;
+
+    // 지원 금액 (String 유지)
+    @CsvBindByName(column = "지원내역 상세내용")
+    private String support_amount;
+
+    // 상세 설명 (CSV '특정자격 상세내용' 컬럼)
+    @CsvBindByName(column = "특정자격 상세내용")
+    private String description;
+
+    // 출처 구분 (DB vs API)
     private String sourceType;
 
-    public String getRefId() {
-        return refId;
-    }
-
-    public void setRefId(String refId) {
-        this.refId = refId;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getOrganization() {
-        return organization;
-    }
-
-    public void setOrganization(String organization) {
-        this.organization = organization;
-    }
-
-    public String getDeadline() {
-        return deadline;
-    }
-
-    public void setDeadline(String deadline) {
-        this.deadline = deadline;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public int getSupportAmount() {
-        return support_amount;
-    }
-
-    public void setSupportAmount(int support_amount) {
-        this.support_amount = support_amount;
-    }
-
-    public String getImg() {
-        return img;
-    }
-
-    public void setImg(String img) {
-        this.img = img;
-    }
-
-    public String getSourceType() {
-        return sourceType;
-    }
-
-    public void setSourceType(String sourceType) {
-        this.sourceType = sourceType;
-    }
 }
