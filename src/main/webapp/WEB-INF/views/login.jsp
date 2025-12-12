@@ -20,7 +20,7 @@
     <form action="/login" method="POST">
         <div class="mb-3">
             <label class="form-label fw-bold">이메일</label>
-            <input type="email" name="email" class="form-control" placeholder="example@handong.edu" required>
+            <input type="text" name="email" class="form-control" placeholder="example@handong.edu" required>
         </div>
         <div class="mb-4">
             <label class="form-label fw-bold">비밀번호</label>
