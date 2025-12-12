@@ -1,17 +1,21 @@
 package com.example.donjoogga.controller;
 
-import com.example.donjoogga.service.ScholarshipService; // 이제 경로 맞음!
+import com.example.donjoogga.service.ScholarshipService;
 import com.example.donjoogga.vo.Scholarship;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
 @Controller
 public class HomeController {
+
+    private final int PAGE_SIZE = 10;
 
     @Autowired
     private ScholarshipService scholarshipService;
@@ -21,29 +25,31 @@ public class HomeController {
         return "board/index";
     }
 
-    @GetMapping({"/scholarships"})
-    public String getScholarshipList(Model model) {
+    @RequestMapping("list.do")
+    public String getScholarshipList(
+            @RequestParam(value = "page", defaultValue = "1") int currentPage,
+            Model model) {
 
-        try {
-            // 1. Service를 호출하여 통합된 장학금 리스트 가져오기
-            // 이 메서드는 Admin 등록 정보와 동기화된 재단 정보를 모두 DB에서 조회합니다.
-            List<Scholarship> scholarshipList = scholarshipService.getAllScholarshipList();
+        // 1. 전체 장학금 개수 조회 (DB + API 통합 개수)
+        int totalCount = scholarshipService.getTotalCount();
 
-            // 2. 뷰(JSP)에서 사용할 이름("scholarships")으로 리스트를 Model에 담기
-            model.addAttribute("scholarships", scholarshipList);
+        // 2. 현재 페이지의 시작 행 (Row) 계산
+        // 예: 1페이지(0~9), 2페이지(10~19)
+        int startRow = (currentPage - 1) * PAGE_SIZE;
 
-            // 3. Thymeleaf/JSP 뷰 이름 반환
-            // Spring Boot 설정에 따라 /WEB-INF/views/list.jsp를 찾게 됩니다.
-            return "board/list";
+        // 3. 페이지네이션된 장학금 목록 조회
+        List<Scholarship> scholarshipList = scholarshipService.getPagedScholarshipList(startRow, PAGE_SIZE);
 
-        } catch (Exception e) {
-            // 로깅 처리 (에러가 발생하면 서버 로그에 기록)
-            System.err.println("장학금 목록 조회 중 오류 발생: " + e.getMessage());
+        // 4. 뷰(JSP)에 필요한 데이터 전달
+        model.addAttribute("scholarshipList", scholarshipList);
 
-            // 에러 페이지나 빈 리스트를 전달하여 뷰를 보여줍니다.
-            model.addAttribute("errorMessage", "장학금 정보를 불러오는 데 실패했습니다.");
-            return "errorPage"; // 또는 "list"
-        }
+        // 페이징 처리를 위해 JSP에 전달하는 정보
+        model.addAttribute("totalCount", totalCount);
+        model.addAttribute("currentPage", currentPage);
+        model.addAttribute("pageSize", PAGE_SIZE); // 10
+
+        // InternalResourceViewResolver에 의해 "/WEB-INF/views/board/list.jsp"가 호출됩니다.
+        return "board/list";
     }
 
     @GetMapping("/scholarships/{id}/detail")
