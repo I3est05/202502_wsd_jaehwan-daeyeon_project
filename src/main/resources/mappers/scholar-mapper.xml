@@ -20,9 +20,17 @@
     </select>
 
     <select id="selectPagedScholarships" resultMap="scholarshipResultMap">
-        SELECT *
-        FROM Scholar
-        ORDER BY scholar_id DESC LIMIT #{pageSize} OFFSET #{startRow}
+        SELECT
+            S.scholar_id AS refId,
+            S.title,
+            S.organization,
+            S.deadline,
+            S.category,
+            S.support_amount,
+            S.description,
+            'DB' AS sourceType
+        FROM Scholar S
+        ORDER BY S.scholar_id DESC LIMIT #{pageSize} OFFSET #{startRow}
     </select>
 
     <select id="selectAllAdminScholarships" resultType="com.example.donjoogga.vo.Scholarship">
@@ -33,7 +41,7 @@
             S.deadline,
             S.category,
             S.support_amount    AS supportAmount,
-            'DB'                AS sourceType
+            'DB' AS sourceType,
             S.description
         FROM
             Scholar S
@@ -41,20 +49,45 @@
             S.deadline ASC
     </select>
 
-    <select id="selectScholarshipById" resultType="com.example.donjoogga.vo.Scholarship">
+    <select id="selectScholarshipById" resultMap="scholarshipResultMap">
         SELECT
-            S.scholar_id        AS refId,
+            S.scholar_id AS refId,
             S.title,
             S.organization,
             S.deadline,
             S.category,
-            S.support_amount    AS supportAmount,
-            S.description
-            S.sourceType
+            S.support_amount,
+            S.description,
+            'DB' AS sourceType
         FROM
             Scholar S
         WHERE
             S.scholar_id = #{id}
     </select>
 
+    <insert id="insertScholarship" useGeneratedKeys="true" keyProperty="refId">
+        INSERT INTO Scholar (
+            title, organization, deadline, category, support_amount, description
+        ) VALUES (
+            #{title}, #{organization}, #{deadline}, #{category}, #{support_amount}, #{description}
+                 )
+    </insert>
+
+    <update id="updateScholarship">
+        UPDATE Scholar
+        SET
+            title = #{title},
+            organization = #{organization},
+            deadline = #{deadline},
+            category = #{category},
+            support_amount = #{support_amount},
+            description = #{description}
+        WHERE
+            scholar_id = #{refId}
+    </update>
+
+    <delete id="deleteScholarship">
+        DELETE FROM Scholar
+        WHERE scholar_id = #{id}
+    </delete>
 </mapper>
