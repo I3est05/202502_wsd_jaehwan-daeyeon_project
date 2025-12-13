@@ -30,7 +30,7 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto align-items-center">
         <c:if test="${sessionScope.loginUser.userId != 'admin'}">
-          <li class="nav-item"><a class="nav-link" href="#">장학금 찾기</a></li>
+            <li class="nav-item"><a class="nav-link" href="<c:url value='/list.do'/>">장학금 찾기</a></li>
           <c:if test="${sessionScope.loginUser != null}">
             <li class="nav-item"><a class="nav-link" href="#">컨설팅 리포트</a></li>
           </c:if>
@@ -49,7 +49,7 @@
             <c:choose>
               <c:when test="${sessionScope.loginUser.userId.equals('admin')}">
                 <li class="nav-item ms-3">
-                  <a href="/adminpage" class="nav-link fw-bold text-primary">
+                  <a href="/admin/manage" class="nav-link fw-bold text-primary">
                     <i class="fa-solid fa-user-circle"></i> 관리자 페이지
                   </a>
                 </li>

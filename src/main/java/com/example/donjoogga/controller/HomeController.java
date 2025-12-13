@@ -52,28 +52,25 @@ public class HomeController {
         return "board/list";
     }
 
-    @GetMapping("/scholarships/{id}/detail")
-    public String getScholarshipDetail(@PathVariable("id") Long id, Model model) {
+    @RequestMapping("detail.do")
+    public String getScholarshipDetail(@RequestParam("id") Long id, Model model) {
 
         try {
-            // 1. Service를 호출하여 단일 장학금 정보 조회
+            // 1. Service를 호출하여 단일 장학금 정보 조회 (DB, CSV 통합)
             Scholarship scholarship = scholarshipService.getScholarshipDetail(id);
 
             if (scholarship == null) {
-                // 장학금 정보가 없을 경우 404 처리 또는 목록으로 리다이렉트
                 model.addAttribute("errorMessage", "요청하신 장학금 정보를 찾을 수 없습니다.");
                 return "errorPage"; // errorPage.jsp로 이동 가정
             }
 
-            // 2. 뷰(JSP)에서 사용할 이름("scholarship")으로 객체를 Model에 담기
             model.addAttribute("scholarship", scholarship);
 
-            // 3. 뷰 이름 반환
-            return "detail"; // detail.jsp로 이동
+            return "board/detail"; // detail.jsp로 이동
 
         } catch (Exception e) {
             System.err.println("장학금 상세 조회 중 오류 발생: " + e.getMessage());
-            model.addAttribute("errorMessage", "서버 오류로 상세 정보를 불러올 수 없습니다.");
+            model.addAttribute("errorMessage", "장학금 상세 정보를 불러오는 중 오류가 발생했습니다.");
             return "errorPage";
         }
     }

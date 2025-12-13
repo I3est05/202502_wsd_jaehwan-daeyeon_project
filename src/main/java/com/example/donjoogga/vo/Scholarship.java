@@ -2,7 +2,6 @@ package com.example.donjoogga.vo;
 
 import lombok.Data;
 import com.opencsv.bean.CsvBindByName;
-import java.time.LocalDateTime;
 
 @Data
 public class Scholarship {
