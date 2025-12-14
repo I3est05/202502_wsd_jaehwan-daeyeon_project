@@ -5,6 +5,7 @@ import com.example.donjoogga.vo.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -48,15 +49,23 @@ public class AuthController {
 
         User loginUser = userService.login(userId, password);
 
-        if (loginUser != null) {
-            // 성공: 세션에 유저 정보 담고 메인으로
-            session.setAttribute("loginUser", loginUser);
-            System.out.println("로그인 성공: " + loginUser.getUserId());
-            return "redirect:/";
-        } else {
-            // 실패: 다시 로그인 페이지로 (에러 표시용 파라미터 추가)
+        if (loginUser == null) {
             System.out.println("로그인 실패");
             return "redirect:/login?error";
         }
+
+
+        // 관리자 계정 체크
+        if(loginUser.getUserId().equals("admin") && loginUser.getPassword().equals("admin1234") ){
+            session.setAttribute("admin", loginUser); // 관리자 세션 설정
+            System.out.println("관리자 로그인 성공: " + loginUser.getUserId());
+            return "redirect:/list.do"; // 요청하신대로 /list.do로 이동
+        }
+        else { // 일반 유저
+            session.setAttribute("loginUser", loginUser);
+            System.out.println("일반 사용자 로그인 성공: " + loginUser.getUserId());
+            return "redirect:/"; // 메인 페이지로 이동
+        }
     }
+
 }
