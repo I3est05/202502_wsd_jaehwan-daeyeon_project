@@ -18,19 +18,19 @@ public class ScrapRestController {
     private MyScholarshipService myScholarshipService;
 
     @PostMapping(value = "/toggle", produces = "application/json; charset=UTF-8")
-    public ResponseEntity<?> toggleScrap(@RequestParam("scholarId") Long scholarId, HttpSession session) {
+    public ResponseEntity<?> toggleScrap(
+            @RequestParam("scholarId") Long scholarId,
+            @RequestParam(value="isApi", defaultValue="0") int isApi, // JSP에서 보낸 값
+            HttpSession session) {
+
         User loginUser = (User) session.getAttribute("loginUser");
-        if (loginUser == null) {
-            return ResponseEntity.status(401).body("{\"result\": \"login_required\"}");
-        }
+        if (loginUser == null) return ResponseEntity.status(401).build();
 
-        // 서비스에서 boolean 결과 받기
-        boolean isScrapped = myScholarshipService.toggleScrap(loginUser.getUserId(), scholarId);
+        // 서비스 호출 시 isApi 전달
+        boolean result = myScholarshipService.toggleScrap(loginUser.getUserId(), scholarId, isApi);
 
-        // 명시적으로 JSON 형태로 응답 (Map 활용 추천)
-        Map<String, Object> response = new HashMap<>();
-        response.put("isScrapped", isScrapped);
-
-        return ResponseEntity.ok(response);
+        Map<String, Object> map = new HashMap<>();
+        map.put("isScrapped", result);
+        return ResponseEntity.ok(map);
     }
 }

@@ -24,13 +24,15 @@
 
     <select id="selectMyScrapList" resultType="com.example.donjoogga.vo.Scholarship">
         SELECT
-            S.scholar_id AS refId,
-            S.title,
-            S.organization,
+            M.scholar_id AS refId,      -- ✅ 핵심: Scholar 테이블이 아닌 MyScholarship의 ID를 우선 가져옴
+            S.title,                    -- CSV 데이터일 경우 NULL로 넘어옴
+            S.organization,             -- CSV 데이터일 경우 NULL로 넘어옴
             S.deadline,
             S.category,
-            M.saved_date AS savedDate FROM Scholar S
-                                               JOIN MyScholarship M ON S.scholar_id = M.scholar_id
+            M.is_api_data AS isApiData, -- ✅ API 여부 확인을 위해 추가
+            M.saved_date AS savedDate
+        FROM MyScholarship M            -- ✅ MyScholarship을 기준으로 시작
+                 LEFT JOIN Scholar S ON M.scholar_id = S.scholar_id -- ✅ LEFT JOIN으로 변경
         WHERE M.user_id = #{userId}
         ORDER BY M.saved_date DESC
     </select>

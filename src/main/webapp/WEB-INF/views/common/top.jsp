@@ -29,17 +29,12 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto align-items-center">
-
+                <li class="nav-item"><a class="nav-link" href="<c:url value='/list.do'/>">장학금 찾기</a></li>
                 <%-- **메인 기능 메뉴: 역할에 따라 장학금 찾기 또는 컨설팅 리포트 표시** --%>
                 <c:choose>
-                    <%-- 1. 일반 사용자일 경우 (loginUser 존재, admin은 아님) 컨설팅 리포트 표시 --%>
                     <c:when test="${sessionScope.loginUser != null && sessionScope.admin == null}">
                         <li class="nav-item"><a class="nav-link" href="#">컨설팅 리포트</a></li>
                     </c:when>
-                    <%-- 2. 관리자 또는 로그아웃 상태일 경우 장학금 찾기 표시 --%>
-                    <c:otherwise>
-                        <li class="nav-item"><a class="nav-link" href="<c:url value='/list.do'/>">장학금 찾기</a></li>
-                    </c:otherwise>
                 </c:choose>
 
                 <%-- 로그인/회원가입 또는 마이페이지/관리자페이지/로그아웃 버튼 --%>

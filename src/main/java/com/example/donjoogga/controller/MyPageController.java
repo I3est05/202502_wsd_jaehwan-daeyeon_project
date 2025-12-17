@@ -1,6 +1,7 @@
 package com.example.donjoogga.controller;
 
 import com.example.donjoogga.mapper.ScholarshipMapper;
+import com.example.donjoogga.service.ScholarshipService;
 import com.example.donjoogga.service.UserService;
 import com.example.donjoogga.service.MyScholarshipService; // 추가
 import com.example.donjoogga.mapper.MyScholarshipMapper; // 추가
@@ -27,7 +28,7 @@ public class MyPageController {
     private MyScholarshipMapper myScholarshipMapper; // ✅ Mapper 주입 확인
 
     @Autowired
-    private ScholarshipMapper scholarshipMapper;
+    private ScholarshipService scholarshipService;
     // ✅ 중복되었던 myPage 메소드를 하나로 통합했습니다.
     @GetMapping("/mypage")
     public String myPage(HttpSession session, Model model) {
@@ -37,12 +38,34 @@ public class MyPageController {
             return "redirect:/login?required";
         }
 
-        // ✅ 찜한 리스트 가져오기 (Scholar 테이블과 JOIN된 데이터)
-        // loginUser.getUserId()의 리턴 타입이 String인지 int인지 확인하세요.
+        // 1. DB에서 찜 목록을 가져옵니다 (LEFT JOIN 쿼리 결과)
         List<Scholarship> scrapList = myScholarshipMapper.selectMyScrapList(loginUser.getUserId());
 
+        // 2. ✅ CSV 데이터 정보 채우기 로직 추가
+        if (scrapList != null) {
+            for (Scholarship s : scrapList) {
+                // Scholar 테이블에 없는 ID(예: 21)는 JOIN 결과 title이 NULL입니다.
+                if (s.getTitle() == null) {
+                    // ScholarshipService의 getScholarshipDetail을 사용하여 CSV에서 정보를 읽어옵니다.
+                    // s.getRefId() 또는 s.getScholarId() 중 Mapper에서 ID를 담은 필드명을 사용하세요.
+                    Scholarship apiData = scholarshipService.getScholarshipDetail(s.getRefId());
+
+                    if (apiData != null) {
+                        s.setTitle(apiData.getTitle());
+
+                        // ✅ setInstitution 대신 setOrganization을 사용해야 합니다!
+                        s.setOrganization(apiData.getOrganization());
+
+                        s.setCategory(apiData.getCategory());
+                        // 추가로 마감일 등도 넣고 싶다면
+                        s.setDeadline(apiData.getDeadline());
+                    }
+                }
+            }
+        }
+
         model.addAttribute("user", loginUser);
-        model.addAttribute("scrapList", scrapList); // JSP에서 사용할 이름
+        model.addAttribute("scrapList", scrapList);
 
         return "user/mypage";
     }
@@ -50,24 +73,27 @@ public class MyPageController {
     // ScholarshipController.java 또는 관련 컨트롤러
     @GetMapping("/detail.do")
     public String scholarshipDetail(@RequestParam("id") Long id, HttpSession session, Model model) {
-        // 1. 장학금 상세 정보 조회 (기존 로직)
-        Scholarship scholarship = scholarshipMapper.selectScholarshipById(id);
 
-        // 2. 현재 로그인한 유저가 이 장학금을 찜했는지 확인하는 로직 추가
+        // ✅ 핵심 수정: 서비스의 메서드를 호출하여 DB와 CSV 모두에서 찾습니다.
+        Scholarship scholarship = scholarshipService.getScholarshipDetail(id);
+
+        if (scholarship == null) {
+            return "redirect:/list.do?error=notfound";
+        }
+
+        // 찜 상태 확인 로직 (기존과 동일)
         User loginUser = (User) session.getAttribute("loginUser");
         boolean isScrapped = false;
-
         if (loginUser != null) {
-            // 매퍼를 통해 DB에 해당 유저와 장학금 ID 조합이 있는지 확인
-            // 결과가 1이면 true, 0이면 false
+            // CSV 데이터의 id도 여기서 scholarId로 처리됩니다.
             int count = myScholarshipMapper.checkScrapped(loginUser.getUserId(), id);
             isScrapped = (count > 0);
         }
 
         model.addAttribute("scholarship", scholarship);
-        model.addAttribute("isScrapped", isScrapped); // ✅ 이 값이 JSP의 하트 모양을 결정합니다.
+        model.addAttribute("isScrapped", isScrapped);
 
-        return "board/detail"; // 상세 페이지 JSP 경로
+        return "board/detail"; // 실제 detail.jsp가 있는 경로로 설정
     }
 
 
