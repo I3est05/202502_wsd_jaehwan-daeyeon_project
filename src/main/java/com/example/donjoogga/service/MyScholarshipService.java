@@ -12,7 +12,7 @@ public class MyScholarshipService {
     private MyScholarshipMapper myScholarshipMapper;
 
     @Transactional // ✅ 이 어노테이션을 반드시 붙여야 DB에 영구 저장됩니다.
-    public boolean toggleScrap(String userId, Long scholarId) {
+    public boolean toggleScrap(String userId, Long scholarId, int isApi) {
         int count = myScholarshipMapper.checkScrapped(userId, scholarId);
 
         if (count > 0) {
@@ -20,7 +20,7 @@ public class MyScholarshipService {
             return false;
         } else {
             // ✅ 이 메서드가 실행된 후 Commit이 일어나야 DB에 남습니다.
-            myScholarshipMapper.insertMyScholarship(userId, scholarId, 0);
+            myScholarshipMapper.insertMyScholarship(userId, scholarId, isApi);
             return true;
         }
     }
