@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.donjoogga.mapper.MyScholarshipMapper">
+
+    <insert id="insertMyScholarship">
+        INSERT INTO MyScholarship (
+            user_id,
+            scholar_id,
+            is_api_data,
+            saved_date
+        ) VALUES (
+                     #{userId},
+                     #{scholarId},
+                     #{isApiData},
+                     NOW()
+                 )
+    </insert>
+
+    <delete id="deleteMyScholarship">
+        DELETE FROM MyScholarship
+        WHERE user_id = #{userId} AND scholar_id = #{scholarId}
+    </delete>
+
+    <select id="selectMyScrapList" resultType="com.example.donjoogga.vo.Scholarship">
+        SELECT
+            S.scholar_id AS refId,
+            S.title,
+            S.organization,
+            S.deadline,
+            S.category,
+            M.saved_date AS savedDate FROM Scholar S
+                                               JOIN MyScholarship M ON S.scholar_id = M.scholar_id
+        WHERE M.user_id = #{userId}
+        ORDER BY M.saved_date DESC
+    </select>
+
+    <select id="checkScrapped" resultType="int">
+        SELECT COUNT(*)
+        FROM MyScholarship
+        WHERE user_id = #{userId} AND scholar_id = #{scholarId}
+    </select>
+
+</mapper>

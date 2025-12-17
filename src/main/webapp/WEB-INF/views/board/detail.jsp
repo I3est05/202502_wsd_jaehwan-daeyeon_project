@@ -104,10 +104,11 @@
                             <div class="detail-button-group">
 
                                     <%-- 1. 관심 목록에 저장 버튼 (JavaScript로 임시 처리) --%>
-                                <button type="button" class="btn btn-outline-warning text-dark"
-                                        onclick="saveToWishlist('<c:out value="${scholarship.refId}"/>', '<c:out value="${scholarship.title}"/>')">
-                                    <i class="fa-regular fa-heart me-2"></i>관심 목록에 저장
-                                </button>
+                                        <button type="button" id="wishlistBtn"
+                                                class="btn ${isScrapped ? 'btn-warning' : 'btn-outline-warning'} text-dark"
+                                                onclick="saveToWishlist('${scholarship.refId}', '${scholarship.title}')">
+                                            <i class="${isScrapped ? 'fa-solid' : 'fa-regular'} fa-heart me-2"></i>관심 목록에 저장
+                                        </button>
 
                                     <%-- 2. 목록으로 돌아가기 버튼 --%>
                                 <a href="list.do" class="btn btn-outline-secondary">
@@ -138,11 +139,46 @@
 </div>
 
 <script>
-    // 관심 목록 저장 임시 JavaScript 함수
     function saveToWishlist(id, title) {
-        // 실제로는 AJAX 호출을 통해 서버의 관심 목록 DB에 저장하는 로직이 들어갑니다.
-        alert("장학금 ID: " + id + " (" + title + ")을(를) 관심 목록에 저장했습니다!");
-        // 버튼 스타일을 변경하거나 사용자에게 성공 피드백을 줄 수 있습니다.
+        // 1. AJAX 통신 시작
+        fetch('/api/scrap/toggle', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({
+                'scholarId': id
+            })
+        })
+            .then(response => {
+                if (response.status === 401) {
+                    alert("로그인이 필요한 서비스입니다.");
+                    location.href = "/login";
+                    return;
+                }
+                return response.json();
+            })
+            .then(data => {
+                // data는 이제 { "isScrapped": true } 또는 { "isScrapped": false } 형태입니다.
+                const btn = document.querySelector('.btn-outline-warning') || document.querySelector('.btn-warning');
+                const icon = btn.querySelector('i');
+
+                if (data.isScrapped === true) {
+                    alert(title + "을(를) 관심 목록에 저장했습니다!");
+                    // 꽉 찬 하트로 변경
+                    icon.classList.replace('fa-regular', 'fa-solid');
+                    btn.classList.replace('btn-outline-warning', 'btn-warning');
+                } else {
+                    alert("관심 목록에서 삭제되었습니다.");
+                    // 빈 하트로 복구
+                    icon.classList.replace('fa-solid', 'fa-regular');
+                    btn.classList.replace('btn-warning', 'btn-outline-warning');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("처리 중 오류가 발생했습니다.");
+            });
     }
 </script>
 
