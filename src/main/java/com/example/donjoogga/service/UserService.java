@@ -31,5 +31,8 @@ public class UserService {
     public void updateUser(User user) {
             userMapper.update(user);
     }
-
+    // UserService.java
+    public User findById(String userId) {
+        return userMapper.findById(userId); // findById가 UserMapper에 정의되어 있어야 함
+    }
 }
