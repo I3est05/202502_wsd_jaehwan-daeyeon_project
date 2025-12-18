@@ -21,7 +21,7 @@
       <div class="section-title">기본 정보</div>
       <div class="mb-3">
         <label class="form-label">아이디</label>
-        <input type="text" name="userId" class="form-control" placeholder="ronaldo" required>
+        <input type="text" name="userId" class="form-control" placeholder="아이디를 입력하세요" required>
       </div>
       <div class="mb-3">
         <label class="form-label">이메일</label>
@@ -32,16 +32,32 @@
         <input type="password" name="password" class="form-control" required>
       </div>
 
-      <div class="section-title">맞춤형 장학금 설정을 위한 정보</div>
+      <div class="section-title">맞춤형 장학금 설정을 위한 추가 정보</div>
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label class="form-label">학과</label>
+          <input type="text" name="department" class="form-control" placeholder="ex) 컴퓨터공학부" required>
+        </div>
+        <div class="col-md-6 mb-3">
+          <label class="form-label">학년</label>
+          <select name="grade" class="form-select">
+            <option value="1">1학년</option>
+            <option value="2">2학년</option>
+            <option value="3">3학년</option>
+            <option value="4">4학년</option>
+          </select>
+        </div>
+      </div>
+
       <div class="row">
         <div class="col-md-6 mb-3">
           <label class="form-label">학점 (GPA)</label>
           <input type="number" name="gpa" class="form-control" step="0.01" min="0.0" max="4.5" placeholder="ex) 3.5" required>
         </div>
         <div class="col-md-6 mb-3">
-          <label class="form-label">소득분위 (0~10)</label>
-          <select name="incomeBracket" class="form-select">
-            <option value="0">기초생활수급자</option>
+          <label class="form-label">소득분위</label>
+          <select name="incomeBracket" class="form-control">
+            <option value="0">기초생활수급자 (0구간)</option>
             <option value="1">1구간</option>
             <option value="2">2구간</option>
             <option value="3">3구간</option>
@@ -51,14 +67,23 @@
             <option value="7">7구간</option>
             <option value="8">8구간</option>
             <option value="9">9구간</option>
-            <option value="10">10구간</option>
+            <option value="10">10구간 (소득 높음)</option>
           </select>
         </div>
       </div>
 
+      <div class="mb-3">
+        <label class="form-label">거주지 (시/군/구)</label>
+        <input type="text" name="address" class="form-control" placeholder="ex) 경상북도 포항시">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">특이사항 (선택)</label>
+        <textarea name="spec" class="form-control" rows="2" placeholder="ex) 다자녀 가구, 장애인 본인, 한부모 가족 등"></textarea>
+      </div>
+
       <button type="submit" class="btn btn-primary w-100 mt-4 py-2 fw-bold">가입하기</button>
     </form>
-
     <div class="text-center mt-3">
       <a href="/login" class="text-decoration-none text-muted small">이미 계정이 있으신가요? 로그인</a>
     </div>

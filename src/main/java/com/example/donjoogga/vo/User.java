@@ -11,4 +11,8 @@ public class User {
     private int incomeBracket;   // income_bracket
     private float gpa;           // gpa
     private LocalDateTime createdAt; // created_at
+    private String department;   // 학과 (예: 컴퓨터공학)
+    private int grade;           // 학년 (1~4)
+    private String address;      // 거주지 (예: 서울시 강남구)
+    private String spec;
 }
