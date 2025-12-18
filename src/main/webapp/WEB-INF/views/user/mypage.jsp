@@ -46,18 +46,19 @@
             </div>
         </div>
 
+        <%-- 중간 생략: 정보 요약 카드 부분 --%>
         <div class="col-md-9">
             <div class="card p-4 user-info-card mb-4">
                 <h4 class="card-title mb-4"><i class="fa-solid fa-user-tag me-2 text-primary"></i> 개인 정보 및 스펙</h4>
-                <table class="table table-striped">
+                <table class="table">
                     <tbody>
                     <tr>
-                        <th scope="row" style="width: 30%;">아이디 (User ID)</th>
-                        <td>${user.userId}</td>
+                        <th scope="row" style="width: 30%;">아이디 / 이메일</th>
+                        <td>${user.userId} / ${user.email}</td>
                     </tr>
                     <tr>
-                        <th scope="row">이메일</th>
-                        <td>${user.email}</td>
+                        <th scope="row">학과 및 학년</th>
+                        <td>${user.department} / <span class="badge bg-info text-dark">${user.grade}학년</span></td>
                     </tr>
                     <tr>
                         <th scope="row">학점 (GPA)</th>
@@ -65,18 +66,24 @@
                     </tr>
                     <tr>
                         <th scope="row">소득분위</th>
-                        <td>${user.incomeBracket} 구간</td>
+                        <td><span class="badge bg-secondary">${user.incomeBracket} 구간</span></td>
                     </tr>
                     <tr>
-                        <th scope="row">가입일</th>
-                        <td>${user.createdAt}</td>
+                        <th scope="row">거주지</th>
+                        <td>${user.address}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">특이사항 (Spec)</th>
+                        <td><small class="text-muted">${empty user.spec ? '등록된 정보 없음' : user.spec}</small></td>
                     </tr>
                     </tbody>
                 </table>
-                <div class="mt-2 text-end">
-                    <a href="mypage/edit" class="btn btn-sm btn-warning"><i class="fa-solid fa-pencil me-2"></i> 정보 수정</a>
+                <div class="mt-2 d-flex justify-content-between">
+                    <a href="/consulting.do" class="btn btn-primary"><i class="fa-solid fa-wand-magic-sparkles me-2"></i>AI 맞춤 컨설팅 받기</a>
+                    <a href="mypage/edit" class="btn btn-warning"><i class="fa-solid fa-pencil me-2"></i> 정보 수정</a>
                 </div>
             </div>
+            <%-- 이하 찜 목록 섹션은 동일 --%>
 
             <div id="scrap-list-section" class="card p-4 user-info-card shadow-sm">
                 <div class="d-flex justify-content-between align-items-center mb-4">

@@ -4,8 +4,13 @@
 <mapper namespace="com.example.donjoogga.mapper.UserMapper">
 
     <insert id="save" parameterType="com.example.donjoogga.vo.User">
-        INSERT INTO User (user_id, email, password, income_bracket, gpa, created_at)
-        VALUES (#{userId}, #{email}, #{password}, #{incomeBracket}, #{gpa}, NOW())
+        INSERT INTO User (
+            user_id, email, password, income_bracket, gpa,
+            department, grade, address, spec, created_at
+        ) VALUES (
+                     #{userId}, #{email}, #{password}, #{incomeBracket}, #{gpa},
+                     #{department}, #{grade}, #{address}, #{spec}, NOW()
+                 )
     </insert>
 
     <select id="findById" resultType="com.example.donjoogga.vo.User">
@@ -15,6 +20,10 @@
             password       AS password,
             income_bracket AS incomeBracket,
             gpa            AS gpa,
+            department     AS department,
+            grade          AS grade,
+            address        AS address,
+            spec           AS spec,
             created_at     AS createdAt
         FROM User
         WHERE user_id = #{userId}
@@ -26,7 +35,11 @@
             password = #{password},
             email = #{email},
             income_bracket = #{incomeBracket},
-            gpa = #{gpa}
+            gpa = #{gpa},
+            department = #{department},
+            grade = #{grade},
+            address = #{address},
+            spec = #{spec}
         WHERE
             user_id = #{userId}
     </update>
