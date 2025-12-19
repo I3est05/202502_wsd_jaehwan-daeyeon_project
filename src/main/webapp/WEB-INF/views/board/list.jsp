@@ -80,8 +80,8 @@
         border-color: #0d6efd;
     }
 </style>
-
-<div class="container mt-5">
+<body>
+    <div class="container mt-5">
 
     <h2 class="fw-bold mb-2">💰 장학금 통합 목록</h2>
     <p class="text-muted mb-4">총 장학금 수: <strong><%= totalCount %></strong> 개</p>
@@ -151,5 +151,7 @@
         <% } %>
     </div>
 </div>
+    <footer><jsp:include page="../common/bottom.jsp" /></footer>
+</body>
 
-<jsp:include page="../common/bottom.jsp" />
+
