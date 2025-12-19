@@ -28,27 +28,20 @@ public class HomeController {
     @RequestMapping("list.do")
     public String getScholarshipList(
             @RequestParam(value = "page", defaultValue = "1") int currentPage,
+            @RequestParam(value = "keyword", required = false) String keyword,
             Model model) {
 
-        // 1. 전체 장학금 개수 조회 (DB + API 통합 개수)
-        int totalCount = scholarshipService.getTotalCount();
-
-        // 2. 현재 페이지의 시작 행 (Row) 계산
-        // 예: 1페이지(0~9), 2페이지(10~19)
+        int totalCount = scholarshipService.getTotalCount(keyword);
         int startRow = (currentPage - 1) * PAGE_SIZE;
 
-        // 3. 페이지네이션된 장학금 목록 조회
-        List<Scholarship> scholarshipList = scholarshipService.getPagedScholarshipList(startRow, PAGE_SIZE);
+        List<Scholarship> scholarshipList = scholarshipService.getPagedScholarshipList(startRow, PAGE_SIZE, keyword);
 
-        // 4. 뷰(JSP)에 필요한 데이터 전달
         model.addAttribute("scholarshipList", scholarshipList);
-
-        // 페이징 처리를 위해 JSP에 전달하는 정보
         model.addAttribute("totalCount", totalCount);
         model.addAttribute("currentPage", currentPage);
-        model.addAttribute("pageSize", PAGE_SIZE); // 10
+        model.addAttribute("pageSize", PAGE_SIZE);
+        model.addAttribute("keyword", keyword); // 검색어 유지 위해 전달
 
-        // InternalResourceViewResolver에 의해 "/WEB-INF/views/board/list.jsp"가 호출됩니다.
         return "board/list";
     }
 

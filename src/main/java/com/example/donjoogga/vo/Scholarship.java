@@ -31,6 +31,9 @@ public class Scholarship {
     @CsvBindByName(column = "특정자격 상세내용")
     private String description;
 
+    @CsvBindByName(column = "홈페이지 주소")
+    private String homepageUrl;
+
     // 출처 구분 (DB vs API)
     private String sourceType;
 

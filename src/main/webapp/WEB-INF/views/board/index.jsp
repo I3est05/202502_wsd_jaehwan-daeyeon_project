@@ -28,6 +28,19 @@
         .feature-card:hover { transform: translateY(-10px); }
         .icon-box { font-size: 3rem; color: #0d6efd; margin-bottom: 20px; }
         .stats-section { background-color: white; padding: 60px 0; margin-top: 50px; }
+        .input-group {
+            background-color: white;
+            border-radius: 50px !important; /* 완전히 둥근 모서리 */
+            padding: 5px; /* 내부 여백으로 버튼과 입력창 분리감 완화 */
+        }
+        .input-group .form-control:focus {
+            box-shadow: none; /* 클릭 시 파란 테두리 방지 */
+        }
+
+        .input-group .btn {
+            border-radius: 40px !important; /* 버튼도 둥글게 */
+            margin: 2px;
+        }
         footer { background-color: #343a40; color: #ccc; padding: 30px 0; margin-top: 80px; }
     </style>
 </head>
@@ -52,9 +65,33 @@
             당신에게 딱 맞는 지원금과 스펙 가이드를 제공합니다.
         </p>
 
-        <div class="search-box">
-            <input type="text" id="main-search-input" class="search-input" placeholder="관심있는 장학금 키워드 (예: 이공계, 창업, 생활비)">
-            <button type="button" onclick="location.href='${pageContext.request.contextPath}/list.do'" class="btn btn-primary search-btn">검색</button>
+        <div class="row justify-content-center w-100">
+            <div class="col-md-8 col-lg-7">
+                <form action="${pageContext.request.contextPath}/list.do" method="get" class="mt-4">
+                    <div class="input-group input-group-lg shadow-sm border-0" style="border-radius: 15px; overflow: hidden;">
+                <span class="input-group-text bg-white border-0 ps-4">
+                    <i class="fa-solid fa-magnifying-glass text-primary"></i>
+                </span>
+
+                        <input type="text" name="keyword" class="form-control border-0 ps-2"
+                               placeholder="장학금 명칭, 지역, 기관명을 입력하세요"
+                               style="box-shadow: none; height: 70px; font-size: 1.1rem;">
+
+                        <button class="btn btn-primary px-5 fw-bold" type="submit">
+                            검색하기
+                        </button>
+                    </div>
+                </form>
+
+                <div class="mt-3 text-center">
+                    <p class="text-white-50 small">
+                        추천 키워드:
+                        <a href="${pageContext.request.contextPath}/list.do?keyword=국가" class="text-white text-decoration-none mx-2 opacity-75">#국가장학금</a>
+                        <a href="${pageContext.request.contextPath}/list.do?keyword=서울" class="text-white text-decoration-none mx-2 opacity-75">#서울지역</a>
+                        <a href="${pageContext.request.contextPath}/list.do?keyword=근로" class="text-white text-decoration-none mx-2 opacity-75">#근로장학생</a>
+                    </p>
+                </div>
+            </div>
         </div>
     </div>
 </section>

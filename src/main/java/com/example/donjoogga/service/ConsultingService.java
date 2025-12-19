@@ -35,7 +35,7 @@ public class ConsultingService {
         // 1. 데이터 로드 (DB 전부 + CSV 20개 정도)
         List<Scholarship> dbList = scholarshipService.getPagedScholarshipListDBOnly(0, 10);
         int totalDbCount = scholarshipService.getTotalCountDBOnly();
-        List<Scholarship> csvList = scholarshipService.getPagedScholarshipList(totalDbCount, 20);
+        List<Scholarship> csvList = scholarshipService.getPagedScholarshipList(totalDbCount, 20, null);
 
         StringBuilder dataContext = new StringBuilder();
 

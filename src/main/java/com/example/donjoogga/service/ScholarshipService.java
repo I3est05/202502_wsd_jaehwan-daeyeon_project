@@ -12,6 +12,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -20,11 +21,22 @@ public class ScholarshipService {
     @Autowired
     private ScholarshipMapper scholarshipMapper;
 
-    // 장학금 전체 개수 조회 (DB, API 통합 개수)
-    public int getTotalCount() {
-        int dbCount = scholarshipMapper.selectTotalCount();
-        int apiCount = 1800;
-        return dbCount + apiCount;
+    // 검색 결과에 따른 전체 개수도 필요합니다.
+    public int getTotalCount(String keyword) {
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return scholarshipMapper.selectTotalCount() + 1800; // 기존 방식
+        }
+        // 필터링된 전체 리스트의 크기 반환
+        List<Scholarship> allList = new ArrayList<>();
+        allList.addAll(scholarshipMapper.selectAllAdminScholarships());
+        allList.addAll(getAllApiScholarships());
+
+        String finalKeyword = keyword.toLowerCase();
+        return (int) allList.stream()
+                .filter(s -> (s.getTitle() != null && s.getTitle().toLowerCase().contains(finalKeyword)) ||
+                        (s.getOrganization() != null && s.getOrganization().toLowerCase().contains(finalKeyword)) ||
+                        (s.getDescription() != null && s.getDescription().toLowerCase().contains(finalKeyword)))
+                .count();
     }
 
     public int getTotalCountDBOnly() {
@@ -86,36 +98,30 @@ public class ScholarshipService {
         return apiList;
     }
 
-    // ... (getPagedScholarshipList 메서드와 getScholarshipDetail 메서드는 유지)
-    public List<Scholarship> getPagedScholarshipList(int startRow, int pageSize) {
-        List<Scholarship> combinedList = new ArrayList<>();
+    public List<Scholarship> getPagedScholarshipList(int startRow, int pageSize, String keyword) {
+        List<Scholarship> allList = new ArrayList<>();
 
-        // 1. DB (Admin) 장학금 조회 (DB 우선)
-        // startRow부터 pageSize만큼 DB 데이터만 가져옵니다.
-        List<Scholarship> dbList = scholarshipMapper.selectPagedScholarships(startRow, pageSize);
-        combinedList.addAll(dbList);
+        // 1. DB와 API 데이터 합치기 (기존 로직 활용)
+        allList.addAll(scholarshipMapper.selectAllAdminScholarships()); // DB 데이터
+        allList.addAll(getAllApiScholarships()); // API 데이터
 
-        // 2. DB 데이터가 페이지 크기보다 적을 경우 (DB에 데이터가 부족하거나 마지막 페이지)
-        if (combinedList.size() < pageSize) {
-            int needCount = pageSize - combinedList.size();
-
-            List<Scholarship> allApiList = getAllApiScholarships();
-
-            int totalDbCount = scholarshipMapper.selectTotalCount();
-
-            int apiStartRow = startRow - totalDbCount; // API 데이터 시작 인덱스
-
-            if (apiStartRow < 0) {
-            } else if (apiStartRow < allApiList.size()) {
-                int endApiIndex = Math.min(apiStartRow + needCount, allApiList.size());
-                List<Scholarship> requiredApiData =
-                        allApiList.subList(apiStartRow, endApiIndex);
-
-                combinedList.addAll(requiredApiData);
-            }
+        // 2. 키워드가 있다면 필터링 수행
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            String finalKeyword = keyword.toLowerCase();
+            allList = allList.stream()
+                    .filter(s -> (s.getTitle() != null && s.getTitle().toLowerCase().contains(finalKeyword)) ||
+                            (s.getOrganization() != null && s.getOrganization().toLowerCase().contains(finalKeyword)) ||
+                            (s.getDescription() != null && s.getDescription().toLowerCase().contains(finalKeyword)))
+                    .collect(Collectors.toList());
         }
-        return combinedList;
+
+        // 3. 필터링된 결과에서 페이징 처리
+        int end = Math.min(startRow + pageSize, allList.size());
+        if (startRow >= allList.size()) return new ArrayList<>();
+
+        return allList.subList(startRow, end);
     }
+
 
     public Scholarship getScholarshipDetail(Long id) {
         // 1. DB에 저장된 장학금 정보를 조회 시도
