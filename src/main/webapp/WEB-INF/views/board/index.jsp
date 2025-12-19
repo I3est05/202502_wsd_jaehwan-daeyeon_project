@@ -38,7 +38,7 @@
         <c:if test="${not empty sessionScope.loginUser}">
             <c:choose>
                 <c:when test="${sessionScope.loginUser.userId.equals('admin')}">
-                    <h3 class="mb-3 text-warning">반갑습니다, 관리자님!</h3>
+                    <h3 class="mb-3 text-warning">관리자 전용 페이지 입니다!</h3>
                 </c:when>
                 <c:otherwise>
                     <h3 class="mb-3 text-warning">반갑습니다, ${sessionScope.loginUser.userId}님!</h3>
