@@ -2,10 +2,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<%-- 공통 헤더 포함 (경로: ../common/top.jsp) --%>
+<%-- 공통 헤더 포함 --%>
 <jsp:include page="../common/top.jsp" />
 
-<%-- 페이징 관련 변수 계산 로직 재사용 (list.jsp에서 가져옴) --%>
 <%!
     public static class PaginationHelper {
         public static int getTotalPages(int totalCount, int pageSize) {
@@ -27,7 +26,7 @@
 
     int totalCount = (totalCountObj != null) ? totalCountObj.intValue() : 0;
     int currentPage = (currentPageObj != null) ? currentPageObj.intValue() : 1;
-    int pageSize = (pageSizeObj != null) ? pageSizeObj.intValue() : 15; // Admin은 15개로 설정 가정
+    int pageSize = (pageSizeObj != null) ? pageSizeObj.intValue() : 15;
     int pageBlockSize = 10;
 
     int totalPages = PaginationHelper.getTotalPages(totalCount, pageSize);
@@ -36,107 +35,153 @@
 %>
 
 <style>
-    body { padding-top: 100px; }
-    .table-container { min-height: 60vh; }
+    body { background-color: #f8f9fa; padding-top: 80px; }
+
+    /* 마이페이지 스타일 계승: 히어로 헤더 */
+    .manage-header {
+        background: linear-gradient(rgba(33, 37, 41, 0.8), rgba(33, 37, 41, 0.6)),
+        url('https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+        background-size: cover; background-position: center;
+        color: white; padding: 50px 0; margin-bottom: 40px; border-radius: 15px;
+    }
+
+    /* 마이페이지 스타일 계승: 유저 인포 카드 느낌의 테이블 카드 */
+    .admin-card {
+        border-radius: 15px;
+        border: none;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        background: white;
+        padding: 30px;
+    }
+
+    .table { margin-bottom: 0; }
+    .table thead th {
+        background-color: #f1f3f5;
+        border-bottom: 2px solid #dee2e6;
+        color: #495057;
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+    }
+
     .action-group { white-space: nowrap; }
-    /* 페이징 버튼 간격 조정 */
-    .pagination-container a { text-decoration: none; }
+
+    /* 버튼 스타일 커스텀 */
+    .btn-create {
+        border-radius: 10px;
+        font-weight: 600;
+        padding: 10px 20px;
+        box-shadow: 0 4px 6px rgba(40, 167, 69, 0.2);
+    }
+
+    /* 페이징 스타일 */
+    .pagination-container .btn {
+        border-radius: 8px;
+        margin: 0 3px;
+    }
 </style>
 
-<div class="container mt-5 mb-5">
-    <h2 class="fw-bold mb-4">🖥️ 장학금 DB 관리 목록</h2>
-    <p class="text-muted">관리자 등록 장학금 총 <%= totalCount %>개</p>
-
-    <div class="mb-3 text-end">
-        <%-- ✅ 1. 새 장학금 등록 링크에 Context Path 추가 --%>
-        <a href="${pageContext.request.contextPath}/admin/create" class="btn btn-success">
-            <i class="fa-solid fa-plus me-2"></i>새 장학금 등록
-        </a>
+<div class="container">
+    <div class="manage-header text-center shadow-sm">
+        <h1 class="display-5 fw-bold"><i class="fa-solid fa-screwdriver-wrench me-3"></i>장학금 DB 관리</h1>
+        <p class="lead">관리자 권한으로 장학금 데이터를 통합 관리하고 업데이트합니다.</p>
     </div>
 
-    <div class="table-container">
-        <table class="table table-hover table-bordered align-middle">
-            <thead class="table-dark">
-            <tr>
-                <th>ID</th>
-                <th>제목</th>
-                <th>운영기관</th>
-                <th>마감일</th>
-                <th>지원금액</th>
-                <th>관리</th>
-            </tr>
-            </thead>
-            <tbody>
-            <c:choose>
-                <c:when test="${not empty scholarshipList}">
-                    <c:forEach var="scholarship" items="${scholarshipList}">
+    <div class="admin-card">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h4 class="fw-bold m-0 text-dark">
+                <i class="fa-solid fa-list-check me-2 text-primary"></i>등록된 장학금 목록
+                <span class="badge bg-light text-primary border ms-2" style="font-size: 0.9rem;"><%= totalCount %>건</span>
+            </h4>
+            <a href="${pageContext.request.contextPath}/admin/create" class="btn btn-success btn-create">
+                <i class="fa-solid fa-plus me-2"></i>새 장학금 등록
+            </a>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                <tr class="text-center">
+                    <th style="width: 8%;">ID</th>
+                    <th style="width: 35%;">장학금 명칭</th>
+                    <th style="width: 15%;">운영기관</th>
+                    <th style="width: 12%;">마감일</th>
+                    <th style="width: 12%;">지원금액</th>
+                    <th style="width: 18%;">관리 액션</th>
+                </tr>
+                </thead>
+                <tbody>
+                <c:choose>
+                    <c:when test="${not empty scholarshipList}">
+                        <c:forEach var="scholarship" items="${scholarshipList}">
+                            <tr>
+                                <td class="text-center text-muted small">${scholarship.refId}</td>
+                                <td>
+                                    <a href="${pageContext.request.contextPath}/detail.do?id=${scholarship.refId}" target="_blank" class="fw-bold text-decoration-none text-dark">
+                                        <c:out value="${scholarship.title}"/>
+                                        <i class="fa-solid fa-arrow-up-right-from-square ms-1 small text-muted" style="font-size: 0.7rem;"></i>
+                                    </a>
+                                </td>
+                                <td class="text-center"><span class="badge bg-light text-dark border">${scholarship.organization}</span></td>
+                                <td class="text-center small"><c:out value="${scholarship.deadline}"/></td>
+                                <td class="text-center text-primary fw-bold small">${scholarship.support_amount}</td>
+                                <td class="text-center action-group">
+                                    <a href="${pageContext.request.contextPath}/admin/update/${scholarship.refId}" class="btn btn-sm btn-outline-info me-1">
+                                        <i class="fa-solid fa-pen-to-square"></i> 수정
+                                    </a>
+                                    <button type="button" class="btn btn-sm btn-outline-danger" onclick="confirmDelete(${scholarship.refId})">
+                                        <i class="fa-solid fa-trash-can"></i> 삭제
+                                    </button>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                    </c:when>
+                    <c:otherwise>
                         <tr>
-                            <td>${scholarship.refId}</td>
-                            <td>
-                                    <%-- ✅ 2. 일반 사용자 상세 보기 페이지 링크에 Context Path 추가 --%>
-                                <a href="${pageContext.request.contextPath}/detail.do?id=${scholarship.refId}" target="_blank">
-                                    <c:out value="${scholarship.title}"/>
-                                </a>
-                            </td>
-                            <td><c:out value="${scholarship.organization}"/></td>
-                            <td><c:out value="${scholarship.deadline}"/></td>
-                            <td><c:out value="${scholarship.support_amount}"/></td>
-                            <td class="action-group">
-                                    <%-- ✅ 3. 수정 버튼 링크에 Context Path 추가 --%>
-                                <a href="${pageContext.request.contextPath}/admin/update/${scholarship.refId}" class="btn btn-sm btn-info me-2 text-white">
-                                    <i class="fa-solid fa-pen-to-square"></i> 수정
-                                </a>
-                                    <%-- 삭제 버튼 (JS confirmDelete 호출) --%>
-                                <button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete(${scholarship.refId})">
-                                    <i class="fa-solid fa-trash-can"></i> 삭제
-                                </button>
+                            <td colspan="6" class="text-center py-5 text-muted">
+                                <i class="fa-solid fa-inbox fa-3x mb-3 d-block"></i>
+                                등록된 장학금 정보가 없습니다.
                             </td>
                         </tr>
-                    </c:forEach>
-                </c:when>
-                <c:otherwise>
-                    <tr>
-                        <td colspan="6" class="text-center text-muted">등록된 DB 장학금 정보가 없습니다.</td>
-                    </tr>
-                </c:otherwise>
-            </c:choose>
-            </tbody>
-        </table>
-    </div>
+                    </c:otherwise>
+                </c:choose>
+                </tbody>
+            </table>
+        </div>
 
-    <%-- 🎨 페이징 네비게이션 🎨 --%>
-    <div class="pagination-container d-flex justify-content-center mt-4">
-        <%-- ✅ 4. 이전 그룹 링크에 Context Path 추가 --%>
-        <% if (startPage > 1) { %>
-        <a href="${pageContext.request.contextPath}/admin/manage?page=<%= startPage - 1 %>" class="btn btn-outline-secondary btn-sm mx-1">&laquo;</a>
-        <% } %>
+        <div class="pagination-container d-flex justify-content-center mt-5">
+            <% if (startPage > 1) { %>
+            <a href="${pageContext.request.contextPath}/admin/manage?page=<%= startPage - 1 %>" class="btn btn-outline-secondary btn-sm">&laquo;</a>
+            <% } %>
 
-        <%-- ✅ 5. 페이지 번호 링크에 Context Path 추가 --%>
-        <% for (int i = startPage; i <= endPage; i++) {
-            String activeClass = (i == currentPage) ? "btn-primary" : "btn-outline-primary"; %>
-        <a href="${pageContext.request.contextPath}/admin/manage?page=<%= i %>" class="btn <%= activeClass %> btn-sm mx-1"><%= i %></a>
-        <% } %>
+            <% for (int i = startPage; i <= endPage; i++) {
+                String activeClass = (i == currentPage) ? "btn-primary shadow-sm" : "btn-outline-primary"; %>
+            <a href="${pageContext.request.contextPath}/admin/manage?page=<%= i %>" class="btn <%= activeClass %> btn-sm"><%= i %></a>
+            <% } %>
 
-        <%-- ✅ 6. 다음 그룹 링크에 Context Path 추가 --%>
-        <% if (endPage < totalPages) { %>
-        <a href="${pageContext.request.contextPath}/admin/manage?page=<%= endPage + 1 %>" class="btn btn-outline-secondary btn-sm mx-1">&raquo;</a>
-        <% } %>
+            <% if (endPage < totalPages) { %>
+            <a href="${pageContext.request.contextPath}/admin/manage?page=<%= endPage + 1 %>" class="btn btn-outline-secondary btn-sm">&raquo;</a>
+            <% } %>
+        </div>
     </div>
 </div>
 
-<%-- ✅ 7. 삭제 처리 폼 action에 Context Path 추가 --%>
 <form id="deleteForm" method="post" action="${pageContext.request.contextPath}/admin/remove">
     <input type="hidden" name="id" id="deleteId">
 </form>
 
 <script>
     function confirmDelete(id) {
-        if (confirm("ID: " + id + " 장학금 정보를 삭제하시겠습니까? (되돌릴 수 없습니다)")) {
+        if (confirm("ID: " + id + " 장학금 정보를 삭제하시겠습니까? (삭제된 데이터는 복구할 수 없습니다)")) {
             document.getElementById('deleteId').value = id;
             document.getElementById('deleteForm').submit();
         }
     }
 </script>
 
-<%-- 공통 푸터 포함 --%>
-<jsp:include page="../common/bottom.jsp" />
+<footer>
+    <jsp:include page="../common/bottom.jsp" />
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
