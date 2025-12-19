@@ -6,10 +6,13 @@
 <jsp:include page="../common/top.jsp" />
 
 <style>
+    body {
+        padding-top: 100px; /* 헤더에 가려지지 않도록 추가 */
+        background-color: #f8f9fa;
+    }
     .form-label {
         color: #ffc107; /* Warning color for update */
     }
-    /* required 표시 (*) 제거 */
 </style>
 
 <div class="container mt-5 mb-5">
@@ -18,8 +21,8 @@
             <h2 class="fw-bold mb-4 text-warning">🛠️ 장학금 정보 수정</h2>
             <p class="text-muted">ID: <c:out value="${scholarship.refId}"/>의 장학금 정보를 수정합니다. 수정하지 않은 필드는 기존 값을 유지합니다.</p>
 
-            <%-- Form Action은 /admin/update POST 요청을 처리한다고 가정합니다. --%>
-            <form action="/admin/updateok/${scholarship.refId}" method="post" class="needs-validation" novalidate>
+            <%-- ✅ 1. 폼 전송 경로에 Context Path 추가 --%>
+            <form action="${pageContext.request.contextPath}/admin/updateok/${scholarship.refId}" method="post" class="needs-validation" novalidate>
 
                 <div class="card p-5 shadow-lg">
 
@@ -28,7 +31,6 @@
 
                     <div class="mb-4">
                         <label for="title" class="form-label fw-bold">제목</label>
-                        <%-- required 제거 및 value에 기존 값 사용 --%>
                         <input type="text" id="title" name="title" class="form-control form-control-lg"
                                value="${scholarship.title}" placeholder="장학금 명칭">
                     </div>
@@ -36,7 +38,6 @@
                     <div class="mb-4 row">
                         <div class="col-md-6">
                             <label for="organization" class="form-label fw-bold">운영기관</label>
-                            <%-- required 제거 및 value에 기존 값 사용 --%>
                             <input type="text" id="organization" name="organization" class="form-control"
                                    value="${scholarship.organization}" placeholder="운영기관">
                         </div>
@@ -65,14 +66,14 @@
 
                     <div class="mb-4">
                         <label for="description" class="form-label fw-bold">상세 내용 및 자격 요건</label>
-                        <%-- textarea는 value 속성 대신 태그 사이에 기존 값을 넣어줍니다. --%>
                         <textarea id="description" name="description" rows="10" class="form-control"
                                   placeholder="상세 내용 및 자격 요건"><c:out value="${scholarship.description}"/></textarea>
                     </div>
                 </div>
 
                 <div class="d-flex justify-content-between mt-4">
-                    <a href="/admin/manage" class="btn btn-outline-secondary">
+                    <%-- ✅ 2. 목록으로 돌아가기 링크에 Context Path 추가 --%>
+                    <a href="${pageContext.request.contextPath}/admin/manage" class="btn btn-outline-secondary">
                         <i class="fa-solid fa-arrow-left me-2"></i>취소 및 목록으로
                     </a>
                     <button type="submit" class="btn btn-warning btn-lg text-dark">
@@ -84,9 +85,6 @@
         </div>
     </div>
 </div>
-
-<%-- JavaScript 폼 유효성 검사 코드를 제거하거나 비활성화합니다. --%>
-<%-- 단, Bootstrap의 .needs-validation 클래스를 제거하지 않으면 브라우저 기본 유효성 검사가 작동할 수 있으니 주의하세요. --%>
 
 <%-- 공통 푸터 포함 --%>
 <jsp:include page="../common/bottom.jsp" />

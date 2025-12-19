@@ -15,9 +15,9 @@
 </head>
 <body>
 <div class="auth-card">
-    <a href="/" class="brand-title">DONJOOGGA</a>
+    <a href="${pageContext.request.contextPath}/" class="brand-title">DONJOOGGA</a>
 
-    <form action="/login" method="POST">
+    <form action="${pageContext.request.contextPath}/login" method="POST">
         <div class="mb-3">
             <label class="form-label fw-bold">아이디</label>
             <input type="text" name="userId" class="form-control" placeholder="아이디" required>
@@ -30,7 +30,7 @@
     </form>
 
     <div class="text-center text-muted">
-        아직 계정이 없으신가요? <a href="/join" class="text-primary text-decoration-none fw-bold">회원가입</a>
+        아직 계정이 없으신가요? <a href="${pageContext.request.contextPath}/join" class="text-primary text-decoration-none fw-bold">회원가입</a>
     </div>
 </div>
 </body>

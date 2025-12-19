@@ -51,9 +51,10 @@
             소득분위, 학점, 전공만 입력하세요.<br>
             당신에게 딱 맞는 지원금과 스펙 가이드를 제공합니다.
         </p>
+
         <div class="search-box">
-            <input type="text" class="search-input" placeholder="관심있는 장학금 키워드 (예: 이공계, 창업, 생활비)">
-            <button class="btn btn-primary search-btn">검색</button>
+            <input type="text" id="main-search-input" class="search-input" placeholder="관심있는 장학금 키워드 (예: 이공계, 창업, 생활비)">
+            <button type="button" onclick="location.href='${pageContext.request.contextPath}/list.do'" class="btn btn-primary search-btn">검색</button>
         </div>
     </div>
 </section>
@@ -92,7 +93,7 @@
     <div class="container">
         <h3 class="fw-bold mb-4">🔥 지금 주목해야 할 장학금</h3>
         <div class="list-group">
-            <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-4">
+            <a href="${pageContext.request.contextPath}/list.do" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-4">
                 <div>
                     <span class="badge bg-primary mb-2">국가</span>
                     <h5 class="mb-1 fw-bold">2025년 1학기 국가장학금 1차 신청</h5>
@@ -100,7 +101,7 @@
                 </div>
                 <span class="text-danger fw-bold">D-5</span>
             </a>
-            <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-4">
+            <a href="${pageContext.request.contextPath}/list.do" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-4">
                 <div>
                     <span class="badge bg-success mb-2">기업</span>
                     <h5 class="mb-1 fw-bold">드림스폰 청년 희망 장학금</h5>

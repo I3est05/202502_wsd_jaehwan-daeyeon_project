@@ -81,7 +81,7 @@
     }
 </style>
 
-<div class="container **mt-5**">
+<div class="container mt-5">
 
     <h2 class="fw-bold mb-2">💰 장학금 통합 목록</h2>
     <p class="text-muted mb-4">총 장학금 수: <strong><%= totalCount %></strong> 개</p>
@@ -99,7 +99,8 @@
                                 <span class="badge bg-secondary mb-2">${scholarship.organization}</span>
 
                                 <h5 class="card-title mt-2">
-                                    <a href="detail.do?id=<c:out value="${scholarship.refId}"/>" class="card-title-link fw-bold">
+                                        <%-- ✅ 1. 카드 제목 링크에 Context Path 추가 --%>
+                                    <a href="${pageContext.request.contextPath}/detail.do?id=<c:out value="${scholarship.refId}"/>" class="card-title-link fw-bold">
                                         <c:out value="${scholarship.title}"/>
                                     </a>
                                 </h5>
@@ -133,20 +134,20 @@
 
     <%-- 🎨 페이징 네비게이션 🎨 --%>
     <div class="pagination-container">
-        <%-- 이전 그룹으로 --%>
+        <%-- ✅ 2. 이전 그룹 링크에 Context Path 추가 --%>
         <% if (startPage > 1) { %>
-        <a href="list.do?page=<%= startPage - 1 %>" title="이전 10페이지" aria-label="Previous Group">&laquo;</a>
+        <a href="${pageContext.request.contextPath}/list.do?page=<%= startPage - 1 %>" title="이전 10페이지" aria-label="Previous Group">&laquo;</a>
         <% } %>
 
-        <%-- 페이지 번호 --%>
+        <%-- ✅ 3. 페이지 번호 링크에 Context Path 추가 --%>
         <% for (int i = startPage; i <= endPage; i++) {
             String active = (i == currentPage) ? "active" : ""; %>
-        <a href="list.do?page=<%= i %>" class="<%= active %>"><%= i %></a>
+        <a href="${pageContext.request.contextPath}/list.do?page=<%= i %>" class="<%= active %>"><%= i %></a>
         <% } %>
 
-        <%-- 다음 그룹으로 --%>
+        <%-- ✅ 4. 다음 그룹 링크에 Context Path 추가 --%>
         <% if (endPage < totalPages) { %>
-        <a href="list.do?page=<%= endPage + 1 %>" title="다음 10페이지" aria-label="Next Group">&raquo;</a>
+        <a href="${pageContext.request.contextPath}/list.do?page=<%= endPage + 1 %>" title="다음 10페이지" aria-label="Next Group">&raquo;</a>
         <% } %>
     </div>
 </div>
