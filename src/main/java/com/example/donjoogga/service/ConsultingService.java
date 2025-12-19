@@ -67,6 +67,7 @@ public class ConsultingService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         GeminiRequest requestBody = new GeminiRequest(Collections.singletonList(new GeminiRequest.Content(Collections.singletonList(new GeminiRequest.Part(prompt)))));
+
         HttpEntity<GeminiRequest> entity = new HttpEntity<>(requestBody, headers);
 
         try {
