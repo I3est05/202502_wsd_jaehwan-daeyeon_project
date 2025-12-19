@@ -17,29 +17,22 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
         String requestURI = request.getRequestURI();
         String contextPath = request.getContextPath();
 
-        // ✅ 1. 인터셉터 검사에서 제외할 경로 정의
-        // 로그인 페이지, 회원가입 페이지, 메인 페이지, 정적 리소스(CSS/JS) 등
-        if (requestURI.equals(contextPath + "/login") ||
-                requestURI.equals(contextPath + "/join") ||
-                requestURI.equals(contextPath + "/") ||
-                requestURI.startsWith(contextPath + "/resources")) {
-            return true; // 검사하지 않고 통과
-        }
-
-        // 2. 로그인 정보가 없으면 리다이렉트
+        // 로그인 정보가 없으면 (일반 사용자도 아니고, 관리자도 아니면)
         if(obj1 == null && obj2 == null){
-            response.sendRedirect(contextPath + "/login");
+            response.sendRedirect(request.getContextPath() + "/login");
             return false;
         }
 
-        // ... (관리자 권한 체크 로직은 그대로 유지)
         if (requestURI.startsWith(contextPath + "/admin")) {
+            // /admin/** 경로에 접근했는데, admin 세션이 없다면 (즉, 일반 유저 세션만 있다면)
             if (obj2 == null) {
+                // 일반 사용자에게는 접근 권한이 없으므로 홈페이지로 리다이렉트
                 response.sendRedirect(contextPath + "/");
                 return false;
             }
+            // admin 세션이 있다면 (관리자인 경우) 통과
         }
 
-        return true;
+        return HandlerInterceptor.super.preHandle(request, response, handler);
     }
 }

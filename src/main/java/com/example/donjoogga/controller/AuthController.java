@@ -54,18 +54,9 @@ public class AuthController {
             return "redirect:/login?error";
         }
 
-
-        // 관리자 계정 체크
-        if(loginUser.getUserId().equals("admin") && loginUser.getPassword().equals("admin1234") ){
-            session.setAttribute("admin", loginUser); // 관리자 세션 설정
-            System.out.println("관리자 로그인 성공: " + loginUser.getUserId());
-            return "redirect:/list.do"; // 요청하신대로 /list.do로 이동
-        }
-        else { // 일반 유저
             session.setAttribute("loginUser", loginUser);
-            System.out.println("일반 사용자 로그인 성공: " + loginUser.getUserId());
+            System.out.println("로그인 성공: " + loginUser.getUserId());
             return "redirect:/"; // 메인 페이지로 이동
-        }
     }
 
 }

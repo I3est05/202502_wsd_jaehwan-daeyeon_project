@@ -40,10 +40,15 @@
                 <%-- 로그인/회원가입 또는 마이페이지/관리자페이지/로그아웃 버튼 --%>
                 <c:choose>
                     <%-- 1. 관리자 세션 (admin)이 존재하는 경우 --%>
-                    <c:when test="${sessionScope.admin != null}">
+                    <c:when test="${sessionScope.loginUser.userId.equals('admin')}">
                         <li class="nav-item ms-3">
-                            <a href="/admin/manage" class="nav-link fw-bold text-primary">
+                            <a href="<c:url value='/admin/manage'/>" class="nav-link fw-bold text-primary">
                                 <i class="fa-solid fa-user-circle"></i> 관리자 페이지
+                            </a>
+                        </li>
+                        <li class="nav-item ms-3">
+                            <a href="/mypage" class="nav-link fw-bold text-primary">
+                                <i class="fa-solid fa-user-circle"></i> ${sessionScope.loginUser.userId}님의 마이페이지
                             </a>
                         </li>
                         <li class="nav-item ms-2">

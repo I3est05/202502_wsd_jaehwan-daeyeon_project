@@ -6,6 +6,9 @@
 <jsp:include page="../common/top.jsp" />
 
 <style>
+    body{
+        padding-top: 80px;
+    }
     .form-label {
         color: #0d6efd; /* Primary color */
     }

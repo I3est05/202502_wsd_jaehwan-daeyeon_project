@@ -31,7 +31,7 @@ public class AdminController {
         List<Scholarship> dbScholarshipList = scholarshipService.getPagedScholarshipListDBOnly(startRow, PAGE_SIZE);
 
         model.addAttribute("scholarshipList", dbScholarshipList);
-        return "/admin/adminpage";
+        return "admin/adminpage";
     }
 
     // 2. [C] 장학금 등록 폼
