@@ -17,7 +17,7 @@
   <div class="auth-card">
     <h2 class="brand-title">회원가입</h2>
 
-    <form action="/join" method="POST">
+    <form action="${pageContext.request.contextPath}/join" method="POST">
       <div class="section-title">기본 정보</div>
       <div class="mb-3">
         <label class="form-label">아이디</label>
@@ -84,8 +84,9 @@
 
       <button type="submit" class="btn btn-primary w-100 mt-4 py-2 fw-bold">가입하기</button>
     </form>
+
     <div class="text-center mt-3">
-      <a href="/login" class="text-decoration-none text-muted small">이미 계정이 있으신가요? 로그인</a>
+      <a href="${pageContext.request.contextPath}/login" class="text-decoration-none text-muted small">이미 계정이 있으신가요? 로그인</a>
     </div>
   </div>
 </div>

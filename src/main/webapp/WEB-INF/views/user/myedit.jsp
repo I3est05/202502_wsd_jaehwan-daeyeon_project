@@ -45,7 +45,7 @@
 </div>
 
 <div class="container" style="max-width: 800px; margin-top: -50px; position: relative; z-index: 10;">
-  <form action="/mypage/edit" method="post">
+  <form action="${pageContext.request.contextPath}/mypage/edit" method="post">
     <input type="hidden" name="userId" value="${user.userId}">
 
     <div class="form-container-card">
@@ -122,7 +122,7 @@
       <button type="submit" class="btn btn-primary btn-save shadow-sm">
         <i class="fa-solid fa-check-double me-2"></i> 정보 수정 완료
       </button>
-      <a href="/mypage" class="btn btn-link text-muted text-decoration-none text-center">
+      <a href="${pageContext.request.contextPath}/mypage" class="btn btn-link text-muted text-decoration-none text-center">
         <i class="fa-solid fa-xmark me-1"></i> 취소하고 돌아가기
       </a>
     </div>

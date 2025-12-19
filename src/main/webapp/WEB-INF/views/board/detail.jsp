@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <%-- 공통 헤더 포함 --%>
 <jsp:include page="../common/top.jsp" />
@@ -103,19 +103,19 @@
 
                             <div class="detail-button-group">
 
-                                    <%-- 1. 관심 목록에 저장 버튼 (JavaScript로 임시 처리) --%>
-                                        <button type="button" id="wishlistBtn"
-                                                class="btn ${isScrapped ? 'btn-warning' : 'btn-outline-warning'} text-dark"
-                                                onclick="saveToWishlist('${scholarship.refId}', '${scholarship.title}')">
-                                            <i class="${isScrapped ? 'fa-solid' : 'fa-regular'} fa-heart me-2"></i>관심 목록에 저장
-                                        </button>
+                                    <%-- 1. 관심 목록에 저장 버튼 --%>
+                                <button type="button" id="wishlistBtn"
+                                        class="btn ${isScrapped ? 'btn-warning' : 'btn-outline-warning'} text-dark"
+                                        onclick="saveToWishlist('${scholarship.refId}', '${scholarship.title}')">
+                                    <i class="${isScrapped ? 'fa-solid' : 'fa-regular'} fa-heart me-2"></i>관심 목록에 저장
+                                </button>
 
-                                    <%-- 2. 목록으로 돌아가기 버튼 --%>
-                                <a href="list.do" class="btn btn-outline-secondary">
+                                    <%-- ✅ 2. 목록으로 돌아가기 버튼 경로 수정 --%>
+                                <a href="${pageContext.request.contextPath}/list.do" class="btn btn-outline-secondary">
                                     <i class="fa-solid fa-list me-2"></i>목록으로 돌아가기
                                 </a>
 
-                                    <%-- 3. 신청 바로가기 버튼 (Primary Action) --%>
+                                    <%-- 3. 신청 바로가기 버튼 --%>
                                 <button type="button" class="btn btn-primary" onclick="alert('실제 장학금 신청 웹사이트로 이동합니다.');">
                                     <i class="fa-solid fa-arrow-up-right-from-square me-2"></i>신청 바로가기
                                 </button>
@@ -129,7 +129,8 @@
                         <strong>죄송합니다!</strong> 요청하신 장학금 정보를 찾을 수 없습니다.
                     </div>
                     <div class="text-center mt-4">
-                        <a href="list.do" class="btn btn-primary">목록으로 돌아가기</a>
+                            <%-- ✅ 4. 데이터 없을 때 돌아가기 버튼 경로 수정 --%>
+                        <a href="${pageContext.request.contextPath}/list.do" class="btn btn-primary">목록으로 돌아가기</a>
                     </div>
                 </c:otherwise>
             </c:choose>
@@ -140,8 +141,8 @@
 
 <script>
     function saveToWishlist(id, title) {
-        // 1. AJAX 통신 시작
-        fetch('/api/scrap/toggle', {
+        // ✅ 5. AJAX 통신 경로에 Context Path 적용
+        fetch(`${pageContext.request.contextPath}/api/scrap/toggle`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -153,24 +154,22 @@
             .then(response => {
                 if (response.status === 401) {
                     alert("로그인이 필요한 서비스입니다.");
-                    location.href = "/login";
+                    // ✅ 6. 비로그인 시 리다이렉트 경로 수정
+                    location.href = "${pageContext.request.contextPath}/login";
                     return;
                 }
                 return response.json();
             })
             .then(data => {
-                // data는 이제 { "isScrapped": true } 또는 { "isScrapped": false } 형태입니다.
                 const btn = document.querySelector('.btn-outline-warning') || document.querySelector('.btn-warning');
                 const icon = btn.querySelector('i');
 
-                if (data.isScrapped === true) {
+                if (data && data.isScrapped === true) {
                     alert(title + "을(를) 관심 목록에 저장했습니다!");
-                    // 꽉 찬 하트로 변경
                     icon.classList.replace('fa-regular', 'fa-solid');
                     btn.classList.replace('btn-outline-warning', 'btn-warning');
-                } else {
+                } else if (data) {
                     alert("관심 목록에서 삭제되었습니다.");
-                    // 빈 하트로 복구
                     icon.classList.replace('fa-solid', 'fa-regular');
                     btn.classList.replace('btn-warning', 'btn-outline-warning');
                 }

@@ -10,18 +10,21 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body { background-color: #f8f9fa; padding-top: 80px;}
-        .mypage-header { background: linear-gradient(rgba(13, 110, 253, 0.8), rgba(13, 110, 253, 0.6)), url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
-            color: white; padding: 40px 0; margin-bottom: 30px; border-radius: 10px; }
+        .mypage-header {
+            background: linear-gradient(rgba(13, 110, 253, 0.8), rgba(13, 110, 253, 0.6)),
+            url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            color: white; padding: 40px 0; margin-bottom: 30px; border-radius: 10px;
+        }
         .user-info-card { border-left: 4px solid #0d6efd; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
         .nav-link.active { background-color: #e9ecef !important; font-weight: bold; color: #0d6efd !important; }
         footer { background-color: #343a40; color: #ccc; padding: 30px 0; margin-top: 80px; }
-        /* 찜 목록 테이블 스타일 */
         .scrap-table th { background-color: #f1f3f5; }
         .btn-delete-scrap:hover { color: #dc3545 !important; }
     </style>
 </head>
 <body>
 <jsp:include page="../common/top.jsp" />
+
 <div class="container">
     <div class="mypage-header text-center">
         <h1 class="display-5 fw-bold"><i class="fa-solid fa-user-circle me-2"></i> ${user.userId}님의 마이페이지</h1>
@@ -31,22 +34,21 @@
     <div class="row">
         <div class="col-md-3">
             <div class="list-group shadow-sm">
-                <a href="/mypage" class="list-group-item list-group-item-action active">
+                <a href="${pageContext.request.contextPath}/mypage" class="list-group-item list-group-item-action active">
                     <i class="fa-solid fa-address-card me-2"></i> 내 정보 요약
                 </a>
                 <a href="#scrap-list-section" class="list-group-item list-group-item-action">
                     <i class="fa-solid fa-heart text-danger me-2"></i> 찜한 장학금 현황
                 </a>
-                <a href="#" class="list-group-item list-group-item-action">
+                <a href="${pageContext.request.contextPath}/ai/report" class="list-group-item list-group-item-action">
                     <i class="fa-solid fa-chart-bar me-2"></i> 컨설팅 리포트
                 </a>
-                <a href="/logout" class="list-group-item list-group-item-action text-danger">
+                <a href="${pageContext.request.contextPath}/logout" class="list-group-item list-group-item-action text-danger">
                     <i class="fa-solid fa-right-from-bracket me-2"></i> 로그아웃
                 </a>
             </div>
         </div>
 
-        <%-- 중간 생략: 정보 요약 카드 부분 --%>
         <div class="col-md-9">
             <div class="card p-4 user-info-card mb-4">
                 <h4 class="card-title mb-4"><i class="fa-solid fa-user-tag me-2 text-primary"></i> 개인 정보 및 스펙</h4>
@@ -79,11 +81,14 @@
                     </tbody>
                 </table>
                 <div class="mt-2 d-flex justify-content-between">
-                    <a href="/consulting.do" class="btn btn-primary"><i class="fa-solid fa-wand-magic-sparkles me-2"></i>AI 맞춤 컨설팅 받기</a>
-                    <a href="mypage/edit" class="btn btn-warning"><i class="fa-solid fa-pencil me-2"></i> 정보 수정</a>
+                    <a href="${pageContext.request.contextPath}/consulting.do" class="btn btn-primary">
+                        <i class="fa-solid fa-wand-magic-sparkles me-2"></i>AI 맞춤 컨설팅 받기
+                    </a>
+                    <a href="${pageContext.request.contextPath}/mypage/edit" class="btn btn-warning">
+                        <i class="fa-solid fa-pencil me-2"></i> 정보 수정
+                    </a>
                 </div>
             </div>
-            <%-- 이하 찜 목록 섹션은 동일 --%>
 
             <div id="scrap-list-section" class="card p-4 user-info-card shadow-sm">
                 <div class="d-flex justify-content-between align-items-center mb-4">
@@ -113,7 +118,7 @@
                                         </td>
                                         <td><span class="badge bg-light text-dark border">${scrap.organization}</span></td>
                                         <td class="text-center">
-                                            <a href="detail.do?id=${scrap.refId}" class="btn btn-sm btn-outline-primary">
+                                            <a href="${pageContext.request.contextPath}/detail.do?id=${scrap.refId}" class="btn btn-sm btn-outline-primary">
                                                 확인하기
                                             </a>
                                         </td>
@@ -133,7 +138,7 @@
                         <div class="text-center py-5">
                             <i class="fa-solid fa-folder-open fa-3x text-muted mb-3"></i>
                             <p class="text-muted">아직 찜한 장학금이 없습니다.</p>
-                            <a href="/list.do" class="btn btn-outline-primary btn-sm">장학금 목록 보기</a>
+                            <a href="${pageContext.request.contextPath}/list.do" class="btn btn-outline-primary btn-sm">장학금 목록 보기</a>
                         </div>
                     </c:otherwise>
                 </c:choose>
@@ -150,34 +155,27 @@
     function deleteScrap(id, title) {
         if(!confirm("[" + title + "] 장학금을 관심 목록에서 삭제할까요?")) return;
 
-        // 클릭된 버튼 요소를 찾기 위해 이벤트를 이용하거나 버튼 자체를 넘길 수 있지만,
-        // 가장 쉬운 방법은 클릭된 요소의 조상(tr)을 찾아 제거하는 것입니다.
-        const clickedButton = event.currentTarget; // 현재 클릭된 버튼 요소
+        const clickedButton = event.currentTarget;
 
-        fetch('/api/scrap/toggle', {
+        // ✅ Context Path가 포함된 동적 API 경로 설정
+        fetch(`${pageContext.request.contextPath}/api/scrap/toggle`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: new URLSearchParams({ 'scholarId': id })
         })
             .then(response => response.json())
             .then(data => {
-                // 서버에서 반환한 data.isScrapped가 false면 삭제 성공
                 if (data.isScrapped === false) {
                     alert("삭제되었습니다.");
-
-                    // ✅ 새로고침 대신 DOM에서 해당 행(tr)을 즉시 삭제
-                    const row = clickedButton.closest('tr'); // 버튼에서 가장 가까운 tr 태그 찾기
+                    const row = clickedButton.closest('tr');
                     if (row) {
-                        row.style.transition = "all 0.3s ease"; // 부드러운 삭제 효과
+                        row.style.transition = "all 0.3s ease";
                         row.style.opacity = "0";
-
                         setTimeout(() => {
-                            row.remove(); // 0.3초 뒤에 실제로 HTML에서 제거
-
-                            // (옵션) 만약 리스트가 하나도 없으면 "찜한 장학금이 없습니다" 메시지 띄우기
+                            row.remove();
                             const tbody = document.querySelector('.scrap-table tbody');
                             if (tbody && tbody.children.length === 0) {
-                                location.reload(); // 리스트가 아예 비면 레이아웃 구성을 위해 새로고침
+                                location.reload();
                             }
                         }, 300);
                     }

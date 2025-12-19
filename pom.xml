@@ -96,8 +96,7 @@
           <version>2.15.2</version>
       </dependency>
   </dependencies>
-
-  <build>
-    <finalName>Spring1</finalName>
-  </build>
+    <build>
+        <finalName>W25_22400509_1</finalName>
+    </build>
 </project>

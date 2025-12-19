@@ -124,10 +124,10 @@
       </div>
 
       <div class="text-center mt-4">
-        <a href="/mypage" class="btn btn-outline-secondary rounded-pill px-4 shadow-sm">
+        <a href="${pageContext.request.contextPath}/mypage" class="btn btn-outline-secondary rounded-pill px-4 shadow-sm">
           <i class="fa-solid fa-arrow-left me-2"></i> 마이페이지로
         </a>
-        <a href="/list.do" class="btn btn-primary rounded-pill px-4 ms-2 shadow-sm">
+        <a href="${pageContext.request.contextPath}/list.do" class="btn btn-primary rounded-pill px-4 ms-2 shadow-sm">
           <i class="fa-solid fa-list-ul me-2"></i> 장학금 전체목록
         </a>
       </div>
@@ -143,31 +143,24 @@
     const btnContainer = document.getElementById("button-container");
     const quickLinks = document.getElementById("quick-links");
 
-    // 1. 텍스트 구조화 (마크다운 기반 시각화)
     let processedHtml = rawText;
 
-    // 프로필 분석 섹션 카드화
     processedHtml = processedHtml.replace(/\*\*사용자 프로필 분석:\*\*/g,
             '<div class="profile-box"><h5 class="fw-bold text-primary mb-3"><i class="fa-solid fa-user-check me-2"></i>사용자 프로필 분석</h5>');
 
-    // 추천 장학금 목록 타이틀
     processedHtml = processedHtml.replace(/### \*\*추천 장학금 목록\*\*/g,
             '</div><h4 class="fw-bold mt-5 mb-4 border-bottom pb-2"><i class="fa-solid fa-award me-2 text-primary"></i>AI 추천 장학금 리스트</h4>');
 
-    // 개별 장학금 항목을 깔끔한 카드로 변환
     processedHtml = processedHtml.replace(/(\d+)\. \*\*\[ID:(\d+)\](.*?)\*\*/g,
             '<div class="scholar-item"><span class="id-badge mb-2 d-inline-block">추천 $1 | ID:$2</span><h5 class="fw-bold text-dark">$3</h5>');
 
-    // 추천 이유 강조
     processedHtml = processedHtml.replace(/\*\*추천 이유:\*\*/g,
             '<p class="mt-3 mb-1"><span class="badge bg-light text-primary border px-2 py-1">AI 컨설턴트 의견</span><br>');
 
-    // 닫는 태그 처리
     processedHtml = processedHtml.replace(/\n\n/g, '</p></div>');
 
     formattedDiv.innerHTML = processedHtml;
 
-    // 2. 버튼 생성 로직 (ID 추출)
     const regex = /\[ID:(\d+)\]/g;
     let match;
     const ids = new Set();
@@ -180,9 +173,9 @@
       quickLinks.classList.remove("d-none");
       ids.forEach(id => {
         const btn = document.createElement("a");
-        btn.href = "/detail.do?id=" + id;
+        // ✅ 2. 자바스크립트 내 장학금 상세 보기 경로 수정
+        btn.href = "${pageContext.request.contextPath}/detail.do?id=" + id;
         btn.className = "btn btn-recommend rounded-pill px-3 shadow-sm";
-        // \${id} 를 사용하여 JSP EL과 충돌 방지
         btn.innerHTML = `<i class="fa-solid fa-magnifying-glass me-1"></i> [ID:\${id}] 상세보기`;
         btnContainer.appendChild(btn);
       });

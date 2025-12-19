@@ -39,6 +39,8 @@
     body { padding-top: 100px; }
     .table-container { min-height: 60vh; }
     .action-group { white-space: nowrap; }
+    /* 페이징 버튼 간격 조정 */
+    .pagination-container a { text-decoration: none; }
 </style>
 
 <div class="container mt-5 mb-5">
@@ -46,7 +48,8 @@
     <p class="text-muted">관리자 등록 장학금 총 <%= totalCount %>개</p>
 
     <div class="mb-3 text-end">
-        <a href="/admin/create" class="btn btn-success">
+        <%-- ✅ 1. 새 장학금 등록 링크에 Context Path 추가 --%>
+        <a href="${pageContext.request.contextPath}/admin/create" class="btn btn-success">
             <i class="fa-solid fa-plus me-2"></i>새 장학금 등록
         </a>
     </div>
@@ -70,8 +73,8 @@
                         <tr>
                             <td>${scholarship.refId}</td>
                             <td>
-                                    <%-- 일반 사용자 상세 보기 페이지 링크 --%>
-                                <a href="/detail.do?id=${scholarship.refId}" target="_blank">
+                                    <%-- ✅ 2. 일반 사용자 상세 보기 페이지 링크에 Context Path 추가 --%>
+                                <a href="${pageContext.request.contextPath}/detail.do?id=${scholarship.refId}" target="_blank">
                                     <c:out value="${scholarship.title}"/>
                                 </a>
                             </td>
@@ -79,11 +82,11 @@
                             <td><c:out value="${scholarship.deadline}"/></td>
                             <td><c:out value="${scholarship.support_amount}"/></td>
                             <td class="action-group">
-                                    <%-- 수정 버튼 --%>
-                                <a href="/admin/update/${scholarship.refId}" class="btn btn-sm btn-info me-2 text-white">
+                                    <%-- ✅ 3. 수정 버튼 링크에 Context Path 추가 --%>
+                                <a href="${pageContext.request.contextPath}/admin/update/${scholarship.refId}" class="btn btn-sm btn-info me-2 text-white">
                                     <i class="fa-solid fa-pen-to-square"></i> 수정
                                 </a>
-                                    <%-- 삭제 버튼 (POST 요청) --%>
+                                    <%-- 삭제 버튼 (JS confirmDelete 호출) --%>
                                 <button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete(${scholarship.refId})">
                                     <i class="fa-solid fa-trash-can"></i> 삭제
                                 </button>
@@ -102,27 +105,27 @@
     </div>
 
     <%-- 🎨 페이징 네비게이션 🎨 --%>
-    <div class="pagination-container d-flex justify-content-center">
-        <%-- 이전 그룹으로 --%>
+    <div class="pagination-container d-flex justify-content-center mt-4">
+        <%-- ✅ 4. 이전 그룹 링크에 Context Path 추가 --%>
         <% if (startPage > 1) { %>
-        <a href="/admin/manage?page=<%= startPage - 1 %>" class="btn btn-outline-secondary btn-sm mx-1">&laquo;</a>
+        <a href="${pageContext.request.contextPath}/admin/manage?page=<%= startPage - 1 %>" class="btn btn-outline-secondary btn-sm mx-1">&laquo;</a>
         <% } %>
 
-        <%-- 페이지 번호 --%>
+        <%-- ✅ 5. 페이지 번호 링크에 Context Path 추가 --%>
         <% for (int i = startPage; i <= endPage; i++) {
             String activeClass = (i == currentPage) ? "btn-primary" : "btn-outline-primary"; %>
-        <a href="/admin/manage?page=<%= i %>" class="btn <%= activeClass %> btn-sm mx-1"><%= i %></a>
+        <a href="${pageContext.request.contextPath}/admin/manage?page=<%= i %>" class="btn <%= activeClass %> btn-sm mx-1"><%= i %></a>
         <% } %>
 
-        <%-- 다음 그룹으로 --%>
+        <%-- ✅ 6. 다음 그룹 링크에 Context Path 추가 --%>
         <% if (endPage < totalPages) { %>
-        <a href="/admin/manage?page=<%= endPage + 1 %>" class="btn btn-outline-secondary btn-sm mx-1">&raquo;</a>
+        <a href="${pageContext.request.contextPath}/admin/manage?page=<%= endPage + 1 %>" class="btn btn-outline-secondary btn-sm mx-1">&raquo;</a>
         <% } %>
     </div>
 </div>
 
-<%-- 삭제 처리 폼 (POST 요청 전용) --%>
-<form id="deleteForm" method="post" action="/admin/remove">
+<%-- ✅ 7. 삭제 처리 폼 action에 Context Path 추가 --%>
+<form id="deleteForm" method="post" action="${pageContext.request.contextPath}/admin/remove">
     <input type="hidden" name="id" id="deleteId">
 </form>
 

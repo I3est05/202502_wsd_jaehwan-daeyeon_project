@@ -1,8 +1,6 @@
 package com.example.donjoogga.interceptor;
 
 import org.springframework.web.servlet.HandlerInterceptor;
-import org.springframework.web.servlet.ModelAndView;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -17,22 +15,30 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
         String requestURI = request.getRequestURI();
         String contextPath = request.getContextPath();
 
-        // 로그인 정보가 없으면 (일반 사용자도 아니고, 관리자도 아니면)
+        // 1. 로그인 없이도 접근 가능한 "화이트리스트" 경로 체크
+        // 회원가입(/join), 로그인(/login), 메인(/), 정적 리소스(/resources)는 통과시켜야 합니다.
+        if (requestURI.equals(contextPath + "/") ||
+                requestURI.equals(contextPath + "/login") ||
+                requestURI.equals(contextPath + "/join") ||
+                requestURI.startsWith(contextPath + "/resources")) {
+            return true;
+        }
+
+        // 2. 로그인 정보가 아예 없는 경우 (화이트리스트 외의 경로 접근 시)
         if(obj1 == null && obj2 == null){
-            response.sendRedirect(request.getContextPath() + "/login");
+            response.sendRedirect(contextPath + "/login");
             return false;
         }
 
+        // 3. 관리자 전용 경로(/admin/**) 보안 체크
         if (requestURI.startsWith(contextPath + "/admin")) {
-            // /admin/** 경로에 접근했는데, admin 세션이 없다면 (즉, 일반 유저 세션만 있다면)
+            // 관리자 세션이 없으면 메인으로 리다이렉트
             if (obj2 == null) {
-                // 일반 사용자에게는 접근 권한이 없으므로 홈페이지로 리다이렉트
                 response.sendRedirect(contextPath + "/");
                 return false;
             }
-            // admin 세션이 있다면 (관리자인 경우) 통과
         }
 
-        return HandlerInterceptor.super.preHandle(request, response, handler);
+        return true;
     }
 }
