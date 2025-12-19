@@ -39,10 +39,12 @@
 
     /* 마이페이지 스타일 계승: 히어로 헤더 */
     .manage-header {
-        background: linear-gradient(rgba(33, 37, 41, 0.8), rgba(33, 37, 41, 0.6)),
-        url('https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
-        background-size: cover; background-position: center;
-        color: white; padding: 50px 0; margin-bottom: 40px; border-radius: 15px;
+        background: linear-gradient(135deg, #0d6efd 0%, #004dc7 100%);
+        color: white;
+        padding: 60px 0;
+        margin-bottom: 40px;
+        border-radius: 15px;
+        box-shadow: 0 4px 12px rgba(13, 110, 253, 0.2);
     }
 
     /* 마이페이지 스타일 계승: 유저 인포 카드 느낌의 테이블 카드 */
@@ -91,7 +93,7 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h4 class="fw-bold m-0 text-dark">
                 <i class="fa-solid fa-list-check me-2 text-primary"></i>등록된 장학금 목록
-                <span class="badge bg-light text-primary border ms-2" style="font-size: 0.9rem;"><%= totalCount %>건</span>
+                <span class="badge bg-primary px-3 ms-2" style="font-size: 0.9rem;">${scholarshipList.size()}건</span>
             </h4>
             <a href="${pageContext.request.contextPath}/admin/create" class="btn btn-success btn-create">
                 <i class="fa-solid fa-plus me-2"></i>새 장학금 등록
