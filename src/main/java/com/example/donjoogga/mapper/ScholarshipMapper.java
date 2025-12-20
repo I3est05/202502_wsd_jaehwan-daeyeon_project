@@ -30,4 +30,5 @@ public interface ScholarshipMapper {
     // [관리자] 장학금 정보 DB에서 삭제
     void deleteScholarship(Long id);
 
+    List<Scholarship> selectScrappedScholarshipsOrderByDeadline(String userId);
 }

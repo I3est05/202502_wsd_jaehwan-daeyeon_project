@@ -37,4 +37,7 @@ public class Scholarship {
     // 출처 구분 (DB vs API)
     private String sourceType;
 
+    private int matchScore;
+    private int matchPercent;
+
 }

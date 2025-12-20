@@ -36,7 +36,7 @@
 
                 <c:choose>
                     <c:when test="${sessionScope.loginUser != null && sessionScope.admin == null}">
-                        <li class="nav-item"><a class="nav-link" href="<c:url value='#'/>">컨설팅 리포트</a></li>
+                        <li class="nav-item"><a class="nav-link" href="<c:url value="consulting.do"/>">컨설팅 리포트</a></li>
                     </c:when>
                 </c:choose>
 

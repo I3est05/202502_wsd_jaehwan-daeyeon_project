@@ -5,6 +5,20 @@
 <%-- 공통 헤더 포함 --%>
 <jsp:include page="../common/top.jsp" />
 
+<%-- 1. 날짜 계산을 위한 세팅 --%>
+<c:set var="now" value="<%= new java.util.Date() %>" />
+<%-- 오늘 날짜를 yyyy-MM-dd 숫자로 변환 (시간 제외 비교용) --%>
+<fmt:formatDate value="${now}" pattern="yyyy-MM-dd" var="todayStr" />
+<fmt:parseDate value="${todayStr}" pattern="yyyy-MM-dd" var="todayDate" />
+
+<%-- 장학금 마감일을 Date 객체로 변환 --%>
+<fmt:parseDate value="${scholarship.deadline}" pattern="yyyy-MM-dd" var="deadlineDate" />
+
+<%-- 밀리초 단위 차이 계산 --%>
+<c:set var="diff" value="${deadlineDate.time - todayDate.time}" />
+<%-- 날짜 차이 계산 (1일 = 86,400,000 밀리초) --%>
+<fmt:formatNumber value="${diff / (1000 * 60 * 60 * 24)}" var="dDay" pattern="#" />
+
 <style>
     body {
         padding-top: 100px; /* 헤더 공간 확보 */
@@ -57,7 +71,23 @@
                                             <c:out value="${scholarship.organization}"/>
                                         </span>
                                     </div>
-                                    <h4 class="text-danger fw-bold m-0">마감 임박!</h4>
+                                    <div class="text-end">
+                                        <c:choose>
+                                            <%-- 마감일이 지난 경우 --%>
+                                            <c:when test="${dDay < 0}">
+                                                <span class="d-day-badge status-expired">모집 마감</span>
+                                            </c:when>
+                                            <%-- 오늘이 마감일인 경우 --%>
+                                            <c:when test="${dDay == 0}">
+                                                <span class="d-day-badge status-today">오늘 마감 (D-Day)</span>
+                                            </c:when>
+                                            <%-- 마감 전인 경우 (D-Day 표시) --%>
+                                            <c:otherwise>
+                                                <span class="d-day-badge status-active">D-${dDay}</span>
+                                            </c:otherwise>
+                                        </c:choose>
+                                        <p class="small text-muted mt-2">마감일: ${scholarship.deadline}</p>
+                                    </div>
                                 </div>
 
                                 <h2 class="card-title fw-bold mb-4 border-bottom pb-3 text-primary">

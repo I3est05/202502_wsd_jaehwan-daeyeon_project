@@ -90,4 +90,17 @@
         DELETE FROM Scholar
         WHERE scholar_id = #{id}
     </delete>
+
+    <select id="selectScrappedScholarshipsOrderByDeadline" resultMap="scholarshipResultMap">
+        SELECT
+            MS.scholar_id AS refId,
+            MS.is_api_data AS matchScore, S.title,
+            S.organization,
+            S.deadline,
+            S.category,
+            'DB' AS sourceType
+        FROM MyScholarship MS
+                 LEFT JOIN Scholar S ON MS.scholar_id = S.scholar_id AND MS.is_api_data = 0
+        WHERE MS.user_id = #{userId}
+    </select>
 </mapper>

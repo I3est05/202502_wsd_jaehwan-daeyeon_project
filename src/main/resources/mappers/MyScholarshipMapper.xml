@@ -43,4 +43,5 @@
         WHERE user_id = #{userId} AND scholar_id = #{scholarId}
     </select>
 
+
 </mapper>

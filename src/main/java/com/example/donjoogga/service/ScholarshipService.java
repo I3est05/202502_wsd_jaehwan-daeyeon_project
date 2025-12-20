@@ -2,6 +2,7 @@ package com.example.donjoogga.service;
 
 import com.example.donjoogga.mapper.ScholarshipMapper;
 import com.example.donjoogga.vo.Scholarship;
+import com.example.donjoogga.vo.User;
 import com.opencsv.bean.CsvToBeanBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -122,7 +123,6 @@ public class ScholarshipService {
         return allList.subList(startRow, end);
     }
 
-
     public Scholarship getScholarshipDetail(Long id) {
         // 1. DB에 저장된 장학금 정보를 조회 시도
         Scholarship scholarship = scholarshipMapper.selectScholarshipById(id);
@@ -174,4 +174,85 @@ public class ScholarshipService {
     public void removeScholarship(Long id) {
         scholarshipMapper.deleteScholarship(id);
     }
+
+    // [사용자] 장학금 매칭별 구별
+    public List<Scholarship> getRecommendedScholarships(User user) {
+        List<Scholarship> allList = new ArrayList<>();
+        allList.addAll(scholarshipMapper.selectAllAdminScholarships());
+        allList.addAll(getAllApiScholarships());
+
+        for (Scholarship s : allList) {
+            int score = 0;
+            // 특정자격 상세내용(description) 뿐만 아니라 다른 필드들도 검사하면 더 정확합니다.
+            String fullDesc = s.getDescription() + s.getCategory() + s.getTitle();
+
+            // 1. 학과 일치 (+40점)
+            if (fullDesc.contains("제한없음") || (user.getDepartment() != null && fullDesc.contains(user.getDepartment()))) {
+                score += 40;
+            }
+
+            // 2. 소득분위 일치 (+30점)
+            // 유저 분위가 3분위라면 "3분위", "소득" 키워드 확인
+            if (fullDesc.contains(user.getIncomeBracket() + "분위") || fullDesc.contains("소득")) {
+                score += 30;
+            }
+
+            // 3. 성적(GPA) 일치 (+30점)
+            // 유저 GPA가 기준 이상인지 체크 (간단히 키워드 점수 부여)
+            if (fullDesc.contains("성적") || fullDesc.contains("학점")) {
+                score += 30;
+            }
+
+            // 4. 거주지 보너스 (+10점)
+            if (user.getAddress() != null && fullDesc.contains(user.getAddress().substring(0, 2))) {
+                score += 10;
+            }
+
+            s.setMatchScore(score);
+            // 100점 만점 기준으로 환산 (100점 넘으면 100으로 고정)
+            s.setMatchPercent(Math.min(100, score));
+        }
+
+        // 점수가 높은 순으로 정렬 (0점 제외)
+        return allList.stream()
+                .filter(s -> s.getMatchScore() > 0)
+                .sorted((s1, s2) -> Integer.compare(s2.getMatchScore(), s1.getMatchScore()))
+                .collect(Collectors.toList());
+    }
+
+    public List<Scholarship> getNotificationList(String userId) {
+        // 1. DB에서 사용자의 찜 목록을 가져옴
+        List<Scholarship> scraps = scholarshipMapper.selectScrappedScholarshipsOrderByDeadline(userId);
+
+        // 2. 전체 API(CSV) 데이터 리스트 로드 (기존 메서드 활용)
+        List<Scholarship> allApiList = getAllApiScholarships();
+
+        List<Scholarship> finalList = new ArrayList<>();
+
+        for (Scholarship s : scraps) {
+            // matchScore에 담아온 is_api_data가 1이면 API 데이터임
+            if (s.getMatchScore() == 1 || s.getTitle() == null) {
+                for (Scholarship api : allApiList) {
+                    if (api.getRefId().equals(s.getRefId())) {
+                        api.setSourceType("API");
+                        finalList.add(api);
+                        break;
+                    }
+                }
+            } else {
+                s.setSourceType("DB");
+                finalList.add(s);
+            }
+        }
+
+        // 3. 마감일 순서대로 정렬 (오름차순)
+        finalList.sort((s1, s2) -> {
+            if (s1.getDeadline() == null) return 1;
+            if (s2.getDeadline() == null) return -1;
+            return s1.getDeadline().compareTo(s2.getDeadline());
+        });
+
+        return finalList;
+    }
+
 }

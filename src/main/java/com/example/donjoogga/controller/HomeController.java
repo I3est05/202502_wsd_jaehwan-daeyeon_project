@@ -2,6 +2,7 @@ package com.example.donjoogga.controller;
 
 import com.example.donjoogga.service.ScholarshipService;
 import com.example.donjoogga.vo.Scholarship;
+import com.example.donjoogga.vo.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
@@ -66,5 +68,37 @@ public class HomeController {
             model.addAttribute("errorMessage", "장학금 상세 정보를 불러오는 중 오류가 발생했습니다.");
             return "errorPage";
         }
+    }
+
+    @RequestMapping("recommend.do")
+    public String getRecommendList(HttpSession session, Model model) {
+        User loginUser = (User) session.getAttribute("loginUser");
+
+        // 로그인 체크
+        if (loginUser == null) {
+            // 메시지와 함께 리다이렉트하거나 로그인 페이지로 보냄
+            return "redirect:/login";
+        }
+
+        List<Scholarship> recommendList = scholarshipService.getRecommendedScholarships(loginUser);
+        model.addAttribute("recommendList", recommendList);
+        model.addAttribute("user", loginUser);
+
+        return "board/recommendList";
+    }
+
+    @RequestMapping("notification.do")
+    public String notificationPage(HttpSession session, Model model) {
+        User loginUser = (User) session.getAttribute("loginUser");
+
+        if (loginUser == null) {
+            return "redirect:/login"; // 로그인 체크
+        }
+
+        // 마감일순으로 정렬된 찜 목록 가져오기
+        List<Scholarship> scrapList = scholarshipService.getNotificationList(loginUser.getUserId());
+        model.addAttribute("scrapList", scrapList);
+
+        return "board/notification"; // notification.jsp로 이동
     }
 }
