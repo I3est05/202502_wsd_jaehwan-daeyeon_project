@@ -22,6 +22,7 @@ public class ConsultingService {
     @Value("${gemini.api.key}")
     private String API_KEY;
 
+
     @Autowired
     private ScholarshipService scholarshipService;
 
